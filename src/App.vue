@@ -19,9 +19,11 @@
     <q-footer reveal elevated class="bg-grey-8 text-white">
       <q-toolbar>
         <q-tabs align="center">
-          <q-route-tab to="/page1" label="Page One" />
-          <q-route-tab to="/page2" label="Page Two" />
-          <q-route-tab to="/page3" label="Page Three" />
+          <q-route-tab to="/home" label="Home" />
+          <q-route-tab to="/clients" label="Clients" />
+          <q-route-tab to="/upload" label="Upload" />
+          <q-route-tab to="/review" label="Review" />
+          <q-route-tab to="/briefliAI" label="Briefli AI" />
         </q-tabs>
       </q-toolbar>
 
