@@ -3,6 +3,7 @@ import type { RouteRecordRaw } from 'vue-router';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
+    redirect: '/home', //load home component on initiation
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
