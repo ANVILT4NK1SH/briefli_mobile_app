@@ -2,9 +2,10 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-
-        <q-toolbar-title><img src="../assets/images/briefli.svg"> <p>Mobile Companion</p> </q-toolbar-title>
-
+        <q-toolbar-title>
+          <img src="../assets/images/briefli.svg">
+          <span> Mobile Companion </span>
+        </q-toolbar-title>
       </q-toolbar>
     </q-header>
 
