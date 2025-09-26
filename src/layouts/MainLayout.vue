@@ -6,14 +6,14 @@
           <img src="../assets/images/briefli.svg">
           <span> Mobile Companion </span>
         </q-toolbar-title>
-        <div class="q-pa-md q-gutter-sm row justify-end items-center">
-          <q-avatar
-            size="xl"
-            color="secondary"
-            text-color="white"
-            icon="directions"
-          />
-        </div>
+        <router-link to="/userPage" class="q-pa-md q-gutter-sm row justify-end items-center">
+            <q-avatar
+              size="xl"
+              color="secondary"
+              text-color="white"
+              icon="directions"
+            />
+        </router-link>
       </q-toolbar>
     </q-header>
 
