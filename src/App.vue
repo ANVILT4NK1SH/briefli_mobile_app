@@ -2,7 +2,6 @@
   <q-layout view="lHh Lpr lFf">
 
     <q-header elevated class="bg-primary text-white" height-hint="98">
-      <!-- need user icon/menu here -->
     </q-header>
 
     <q-page-container>
