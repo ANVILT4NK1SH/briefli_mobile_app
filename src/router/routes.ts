@@ -8,7 +8,25 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         component: () => import('pages/IndexPage.vue')
-      }],
+      },
+      {
+        path: '/home',
+        component: () => import('components/HomePage.vue')
+      },
+      {
+        path: '/clients',
+        component: () => import('components/ClientList.vue')
+      },
+      {
+        path: '/review',
+        component: () => import('components/ReviewFiles.vue')
+      },
+      {
+        path: '/breifliAI',
+        component: () => import('components/BriefliAI.vue')
+      },
+
+    ],
   },
 
 
