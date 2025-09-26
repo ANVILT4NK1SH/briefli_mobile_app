@@ -7,11 +7,12 @@
           <span> Mobile Companion </span>
         </q-toolbar-title>
         <router-link to="/userPage" class="q-pa-md q-gutter-sm row justify-end items-center">
+          <!-- icon needs to reflect user/client logo, or some other icon -->
             <q-avatar
               size="xl"
               color="secondary"
               text-color="white"
-              icon="directions"
+              icon="user.logo"
             />
         </router-link>
       </q-toolbar>
@@ -24,5 +25,9 @@
 </template>
 
 <script setup lang="ts">
+// placeholder script; 
+/* import { userInfo } from 'os';
+import {ref} from 'vue'
 
+const user = ref(userInfo) */
 </script>
