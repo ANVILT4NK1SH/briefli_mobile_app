@@ -18,7 +18,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('components/ReviewFiles.vue')
       },
       {
-        path: '/breifliAI',
+        path: '/briefliAI',
         component: () => import('components/BriefliAI.vue')
       },
 
