@@ -11,11 +11,11 @@
     <q-footer reveal elevated class="bg-grey-8 text-white">
       <q-toolbar>
         <q-tabs align="center">
-          <q-route-tab to="/home" label="Home" />
-          <q-route-tab to="/clients" label="Clients" />
-          <q-route-tab to="/upload" label="Upload" />
-          <q-route-tab to="/review" label="Review" />
-          <q-route-tab to="/briefliAI" label="Briefli AI" />
+          <q-btn to="/home" label="Home" />
+          <q-btn to="/clients" label="Clients" />
+          <q-btn to="/upload" label="Upload" />
+          <q-btn to="/review" label="Review" />
+          <q-btn to="/briefliAI" label="Briefli AI" />
         </q-tabs>
       </q-toolbar>
 
