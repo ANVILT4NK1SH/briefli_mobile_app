@@ -24,10 +24,16 @@ export default defineComponent({
   setup() {
     const $q = useQuasar()
 
+    //is q.notify being overridden by modal or q-upload error handling?
     const onRejected = (rejectedEntries: QRejectedEntry[]): void => {
       $q.notify({
         type: 'negative',
-        message: `${rejectedEntries.length} file(s) did not pass validation constraints`
+        message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
+        position: 'bottom',
+        timeout: 5000,
+        attrs: {
+          style: 'z-index: 10000;' // should display over modal
+          }
       })
     }
 
