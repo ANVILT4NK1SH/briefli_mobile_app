@@ -13,10 +13,14 @@
         <q-tabs align="center">
           <q-btn to="/home" label="Home" />
           <q-btn to="/clients" label="Clients" />
-          <q-btn to="/upload" label="Upload" />
+          <q-btn label="Upload" @click="displayModal = true"/>
           <q-btn to="/review" label="Review" />
           <q-btn to="/briefliAI" label="Briefli AI" />
         </q-tabs>
+
+        <q-dialog v-model="displayModal" persistent>
+          <UploadOptionModal @close="displayModal = false" />
+        </q-dialog>
       </q-toolbar>
 
     </q-footer>
@@ -25,5 +29,8 @@
 </template>
 
 <script setup lang="ts">
-//
+import UploadOptionModal from './components/UploadOptionModal.vue';
+import { ref } from 'vue';
+
+const displayModal= ref(false)
 </script>
