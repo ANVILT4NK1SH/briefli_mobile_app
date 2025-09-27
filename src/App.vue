@@ -18,7 +18,7 @@
           <q-btn to="/briefliAI" label="Briefli AI" />
         </q-tabs>
 
-        <q-dialog v-model="displayModal" persistent>
+        <q-dialog v-model="displayModal">
           <UploadOptionModal @close="displayModal = false" />
         </q-dialog>
       </q-toolbar>
