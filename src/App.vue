@@ -13,7 +13,7 @@
         <q-tabs align="center">
           <q-btn to="/home" label="Home" />
           <q-btn to="/clients" label="Clients" />
-          <q-btn label="Upload" @click="displayModal = true"/>
+          <q-btn label="Upload" @click="displayModal = true" icon="upload"/>
           <q-btn to="/review" label="Review" />
           <q-btn to="/briefliAI" label="Briefli AI" />
         </q-tabs>
