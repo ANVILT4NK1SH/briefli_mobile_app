@@ -2,6 +2,7 @@
   <div class="q-pa-md">
     <div class="q-gutter-md row items-start">
       <!-- accept property is required for q-upload -->
+       <!-- need proper url/endpoint -->
       <q-uploader
         style="max-width: 300px"
         url="http://localhost:4444/upload"
