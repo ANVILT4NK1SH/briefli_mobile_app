@@ -12,8 +12,9 @@
               size="xl"
               color="secondary"
               text-color="white"
-              icon="user.logo"
-            />
+            >
+            <!-- {{ userInitial }} -->
+            </q-avatar>
         </router-link>
       </q-toolbar>
     </q-header>
@@ -25,9 +26,13 @@
 </template>
 
 <script setup lang="ts">
-// placeholder script; 
+// placeholder script;
 /* import { userInfo } from 'os';
-import {ref} from 'vue'
+import {computed, ref} from 'vue'
 
-const user = ref(userInfo) */
+const user = ref(userInfo)
+
+//get first initial from user.name (if it exists)
+const userInitial = computed(() => {
+return user.value.name?.charAt(0).toUpperCase() || ''}) */
 </script>
