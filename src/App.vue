@@ -8,7 +8,7 @@
       <router-view />
     </q-page-container>
 
-    <q-footer reveal elevated class="bg-grey-8 text-white">
+    <q-footer reveal elevated>
       <q-toolbar>
         <q-tabs align="center">
           <q-btn to="/home" label="Home" />
