@@ -3,8 +3,8 @@
     <q-header elevated>
       <q-toolbar>
         <q-toolbar-title>
-          <img src="../assets/images/briefli.svg">
-          <span> Mobile Companion </span>
+          <img src="../assets/images/briefli.svg" style="width: 150px; height: auto; padding-top: .5em;">
+          <p style="font-size: 10px;"> Mobile Companion </p>
         </q-toolbar-title>
         <router-link to="/userPage" class="q-pa-md q-gutter-sm row justify-end items-center">
           <!-- icon needs to reflect user/client logo, or some other icon -->
