@@ -10,27 +10,24 @@
 
     <q-footer reveal elevated>
       <q-toolbar>
-        <q-tabs align="center">
-          <q-btn to="/home" label="Home" />
-          <q-btn to="/clients" label="Clients" />
-          <q-btn label="Upload" @click="displayModal = true" icon="upload"/>
-          <q-btn to="/review" label="Review" />
-          <q-btn to="/briefliAI" label="Briefli AI" />
-        </q-tabs>
-
-        <q-dialog v-model="displayModal">
-          <UploadOptionModal @close="displayModal = false" @open="handleOpen" />
-        </q-dialog>
-
-        <q-dialog v-model="displayUploadPhotoModal">
-          <UploadPhotoModal @close="displayUploadPhotoModal = false" />
-        </q-dialog>
-
-        <q-dialog v-model="displayUploadFileModal">
-          <UploadFileModal @close="displayUploadFileModal = false" />
-        </q-dialog>
+          <q-btn stack to="/home" label="Home" icon="home" />
+          <q-btn stack to="/clients" label="Clients" icon="group" />
+          <q-btn stack label="Upload" @click="displayModal = true" icon="upload" />
+          <q-btn stack to="/review" label="Review" icon="description" />
+          <q-btn stack to="/briefliAI" label="Briefli AI" icon="flare" />
       </q-toolbar>
 
+      <q-dialog v-model="displayModal">
+        <UploadOptionModal @close="displayModal = false" @open="handleOpen" />
+      </q-dialog>
+
+      <q-dialog v-model="displayUploadPhotoModal">
+        <UploadPhotoModal @close="displayUploadPhotoModal = false" />
+      </q-dialog>
+
+      <q-dialog v-model="displayUploadFileModal">
+        <UploadFileModal @close="displayUploadFileModal = false" />
+      </q-dialog>
     </q-footer>
 
   </q-layout>
