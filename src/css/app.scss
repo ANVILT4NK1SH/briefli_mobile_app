@@ -1,1 +1,8 @@
 // app global css in SCSS form
+@media (max-width: 768px) {
+  .q-btn {
+    font-size: 12px !important;
+    padding: 0.25em 0.5em;
+    min-width: 70px;
+  }
+}
