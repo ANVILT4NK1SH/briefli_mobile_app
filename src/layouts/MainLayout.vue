@@ -33,9 +33,6 @@ onMounted(async () => {
     await auth0.loginWithRedirect();
   }
 
-  // fetch bearer token for API calls
-  //const bearerToken = await auth0.getAccessTokenSilently();
-
   // use the information in about the user to display something
   //we can use this for displaying user information
   /* console.log('auth0 user logged in', {
