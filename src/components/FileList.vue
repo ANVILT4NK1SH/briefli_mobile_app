@@ -1,17 +1,48 @@
 <template>
   <div>FileList</div>
+
+  <!-- potentially use quasar component for displaying the file information -->
+  <div v-for="file in files" :key="file.fileName">
+    <p>{{ file.fileName }}</p>
+    <p>{{ file.status }}</p>
+    <p>{{ file.orgId }}</p>
+    <p>{{ file.documentTypes }}</p>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue';
+import axios from 'axios';
 import { onMounted } from 'vue';
 
-//fetch bearer token for API calls
-const auth0 = useAuth0();
-let bearerToken: string | null = null;
+interface Props {
+  fileName: string;
+  displayName: string;
+  status: string;
+  createdAt: string;
+  processedAt: string;
+  orgId: string;
+  fileSize: string;
+  documentTypes: string[];
+}
 
+let files: Props[] = [];
 onMounted(async () => {
-  bearerToken = await auth0.getAccessTokenSilently();
-  console.log(bearerToken);
+  //fetch bearer token for API calls
+  const auth0 = useAuth0();
+
+  const bearerToken = await auth0.getAccessTokenSilently();
+
+  axios
+    .get('https://demo-api.project-onyx-test.com/file', {
+      headers: { Authorization: `Bearer ${bearerToken}` },
+    })
+    .then((response) => {
+      console.log(response.data);
+      files = response.data;
+    })
+    .catch((error) => {
+      console.error('Error fetching data:', error);
+    });
 });
 </script>
