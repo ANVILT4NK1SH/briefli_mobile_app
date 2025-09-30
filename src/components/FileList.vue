@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue';
 import axios from 'axios';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 
 interface Props {
   fileName: string;
@@ -26,7 +26,8 @@ interface Props {
   documentTypes: string[];
 }
 
-let files: Props[] = [];
+const files = ref<Props[]>([]);
+
 onMounted(async () => {
   //fetch bearer token for API calls
   const auth0 = useAuth0();
@@ -39,7 +40,7 @@ onMounted(async () => {
     })
     .then((response) => {
       console.log(response.data);
-      files = response.data;
+      files.value = response.data;
     })
     .catch((error) => {
       console.error('Error fetching data:', error);
