@@ -8,27 +8,26 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '/home',
-        component: () => import('components/HomePage.vue')
+        component: () => import('components/HomePage.vue'),
       },
       {
         path: '/clients',
-        component: () => import('components/ClientList.vue')
+        component: () => import('components/ClientList.vue'),
       },
       {
         path: '/review',
-        component: () => import('components/ReviewFiles.vue')
+        component: () => import('components/ReviewFiles.vue'),
       },
       {
         path: '/briefliAI',
-        component: () => import('components/BriefliAI.vue')
+        component: () => import('components/BriefliAI.vue'),
       },
       {
         path: '/userPage',
-        component: () => import('components/UserPage.vue')
+        component: () => import('components/UserPage.vue'),
       },
     ],
   },
-
 
   // Always leave this as last one,
   // but you can also remove it
