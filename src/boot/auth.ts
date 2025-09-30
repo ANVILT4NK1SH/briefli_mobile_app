@@ -27,6 +27,5 @@ export default defineBoot(({ app, router }) => {
   );
   // see: https://github.com/auth0/auth0-vue/issues/258#issuecomment-1773724878
   app.config.globalProperties.$router = router;
-  console.log('Using authclient')
   app.use(authClient);
 });
