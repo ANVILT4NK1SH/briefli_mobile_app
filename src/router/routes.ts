@@ -20,7 +20,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/briefliAI',
-        component: () => import('components/BriefliAI.vue'),
+        component: () => import('components/briefliAI.vue'),
       },
       {
         path: '/userPage',

@@ -31,8 +31,8 @@
 
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue';
-import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import axios, { AxiosError } from 'axios';
+import { onMounted, ref, watch } from 'vue';
 
 interface Props {
   fileName: string;
@@ -46,23 +46,90 @@ interface Props {
 }
 
 const files = ref<Props[]>([]);
+const auth0 = useAuth0();
 
 onMounted(async () => {
   //fetch bearer token for API calls
-  const auth0 = useAuth0();
 
-  const bearerToken = await auth0.getAccessTokenSilently();
-
-  axios
-    .get('https://demo-api.project-onyx-test.com/file', {
-      headers: { Authorization: `Bearer ${bearerToken}` },
-    })
-    .then((response) => {
-      console.log(response.data);
-      files.value = response.data;
-    })
-    .catch((error) => {
-      console.error('Error fetching data:', error);
+  if (auth0.isLoading.value) {
+    await new Promise<void>((resolve) => {
+      const stop = watch(auth0.isLoading, (loading) => {
+        if (!loading) {
+          stop(); // Stop the watcher
+          resolve();
+        }
+      });
     });
+  }
+
+  if (!auth0.isAuthenticated.value) {
+    await auth0.loginWithRedirect({
+      authorizationParams: {
+        audience: 'https://demo-api.project-onyx-test.com',
+        scope: 'openid profile email offline_access',
+      },
+    });
+    return;
+  }
+
+  try {
+    const bearerToken = await auth0.getAccessTokenSilently({
+      authorizationParams: {
+        audience: 'https://demo-api.project-onyx-test.com',
+        scope: 'openid profile email offline_access',
+      },
+    });
+
+    const response = await axios.get('https://demo-api.project-onyx-test.com/file', {
+      headers: { Authorization: `Bearer ${bearerToken}` },
+    });
+
+    files.value = response.data;
+    console.log('Files fetched:', response.data);
+  } catch (error) {
+    // Type narrowing for error
+    let errorMessage = 'Unknown error';
+    let errorStatus: number | undefined;
+    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+    let errorData: unknown | undefined;
+
+    if (error instanceof AxiosError) {
+      // Handle Axios-specific errors
+      errorMessage = error.response?.data?.message || error.message || 'Axios error';
+      errorStatus = error.response?.status;
+      errorData = error.response?.data;
+    } else if (error instanceof Error) {
+      // Handle general errors (e.g., from Auth0)
+      errorMessage = error.message;
+    }
+
+    console.error('Error fetching data:', {
+      message: errorMessage,
+      status: errorStatus,
+      data: errorData,
+    });
+
+    if (errorMessage.includes('Missing Refresh Token') || errorMessage.includes('Login required')) {
+      await auth0.loginWithRedirect({
+        authorizationParams: {
+          audience: 'https://demo-api.project-onyx-test.com',
+          scope: 'openid profile email offline_access',
+        },
+      });
+    }
+  }
+  // const bearerToken = await auth0.getAccessTokenSilently();
+
+  // axios
+  //   .get('https://demo-api.project-onyx-test.com/file', {
+  //     headers: { Authorization: `Bearer ${bearerToken}` },
+  //   })
+  //   .then((response) => {
+  //     console.log(response.data);
+  //     files.value = response.data;
+  //   })
+  //   .catch((error) => {
+  //     console.error('Error fetching data:', error);
+  //   });
 });
 </script>
