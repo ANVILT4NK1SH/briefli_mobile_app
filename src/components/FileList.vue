@@ -10,8 +10,17 @@
     </q-item-section>
 
     <q-item-section side top>
-      <!-- if processed, $positive; if failed, $negative; if processing, $warning -->
-      <q-item-label caption>{{ file.status }}</q-item-label>
+      <!-- UNSURE OF ALL POSSIBLE STATUS CODES; failed, review etc? -->
+      <q-item-label
+        caption
+        :class="{
+          'bg-positive': file.status === 'EXPORTED',
+          'text-negative': file.status === 'FAILED',
+          'bg-warning': file.status === 'PROCESSED',
+        }"
+      >
+        {{ file.status }}
+      </q-item-label>
     </q-item-section>
     <q-separator spaced inset />
   </q-item>
