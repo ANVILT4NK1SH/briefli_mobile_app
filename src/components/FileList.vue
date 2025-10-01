@@ -15,7 +15,7 @@
         caption
         :class="{
           'bg-positive': file.status === 'EXPORTED',
-          'text-negative': file.status === 'FAILED',
+          'bg-negative': file.status === 'FAILED',
           'bg-warning': file.status === 'PROCESSED',
         }"
       >
