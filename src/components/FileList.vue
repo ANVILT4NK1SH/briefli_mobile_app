@@ -1,13 +1,20 @@
 <template>
-  <div>FileList</div>
+  <q-item v-for="file in files" :key="file.fileName">
+    <q-item-section side left>
+      <q-item-label>{{ file.documentTypes[0] }}</q-item-label>
+    </q-item-section>
 
-  <!-- potentially use quasar component for displaying the file information -->
-  <div v-for="file in files" :key="file.fileName">
-    <p>{{ file.fileName }}</p>
-    <p>{{ file.status }}</p>
-    <p>{{ file.orgId }}</p>
-    <p>{{ file.documentTypes }}</p>
-  </div>
+    <q-item-section>
+      <q-item-label>{{ file.displayName }}</q-item-label>
+      <q-item-label caption>{{ file.orgId }}</q-item-label>
+    </q-item-section>
+
+    <q-item-section side top>
+      <!-- if processed, $positive; if failed, $negative; if processing, $warning -->
+      <q-item-label caption>{{ file.status }}</q-item-label>
+    </q-item-section>
+    <q-separator spaced inset />
+  </q-item>
 </template>
 
 <script setup lang="ts">
