@@ -23,7 +23,6 @@
 
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue';
-import axios from 'axios';
 import { onMounted } from 'vue';
 
 onMounted(async () => {
@@ -33,26 +32,5 @@ onMounted(async () => {
   if (!auth0?.user?.value) {
     await auth0.loginWithRedirect();
   }
-
-  // get bearer token
-  const bearerToken = await auth0.getAccessTokenSilently();
-
-  // use the information in about the user to display something
-  //we can use this for displaying user information
-  /* console.log('auth0 user logged in', {
-  firstName: auth0.user.value.given_name,
-  lastName: auth0.user.value.family_name
-  }); */
-
-  axios
-    .get('https://demo-api.project-onyx-test.com/file', {
-      headers: { Authorization: `Bearer ${bearerToken}` },
-    })
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error('Error fetching data:', error);
-    });
 });
 </script>
