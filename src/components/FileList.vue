@@ -1,7 +1,10 @@
 <template>
   <q-item v-for="file in files" :key="file.fileName">
     <q-item-section side left>
-      <q-item-label>{{ file.documentTypes[0] }}</q-item-label>
+      <q-avatar icon="description" />
+      <q-item-label>
+        {{ file.documentTypes[0] }}
+      </q-item-label>
     </q-item-section>
 
     <q-item-section>
