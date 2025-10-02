@@ -1,46 +1,48 @@
 <template>
   <div class="q-pa-md">
-    <div class="q-gutter-md row items-start">
-      <!-- accept property is required for q-upload -->
-       <!-- need proper url/endpoint -->
-      <q-uploader
-        style="max-width: 300px"
-        url="http://localhost:4444/upload"
-        label="Restricted to images"
-        multiple
-        accept=".jpg, .jpeg, .png, .gif, image/*"
-        @rejected="onRejected"
-      />
+    <q-btn label="Capture Photo" color="primary" @click="capturePhoto" />
+    <div v-if="imageUrl" class="q-mt-md">
+      <img :src="imageUrl" alt="Captured Image" style="max-width: 300px;" />
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { useQuasar} from 'quasar'
-import type { QRejectedEntry } from 'quasar'
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useQuasar, type QNotifyOptions } from 'quasar'
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
 
-export default defineComponent({
-  name: 'PhotoUploader',
-  setup() {
-    const $q = useQuasar()
+const $q = useQuasar()
+const imageUrl = ref<string>('')
 
-    //is q.notify being overridden by modal or q-upload error handling?
-    const onRejected = (rejectedEntries: QRejectedEntry[]): void => {
+const capturePhoto = async () => {
+  try {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Uri, // Returns a file URI
+      source: CameraSource.Camera // Forces camera (not gallery)
+    })
+
+    if (image.webPath) {
+      imageUrl.value = image.webPath // For preview
+      // Convert URI to File (if needed)
+      const response = await fetch(image.webPath)
+      const blob = await response.blob()
+      const file = new File([blob], `photo-${Date.now()}.jpg`, { type: 'image/jpeg' })
+      console.log('Captured image as File:', file)
+
       $q.notify({
-        type: 'negative',
-        message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
-        position: 'bottom',
-        timeout: 5000,
-        attrs: {
-          style: 'z-index: 10000;' // should display over modal
-          }
-      })
+        message: 'Photo captured successfully',
+        color: 'positive'
+      } as QNotifyOptions)
     }
-
-    return {
-      onRejected
-    }
+  } catch (err: unknown) {
+    $q.notify({
+      message: 'Failed to capture photo',
+      color: 'negative'
+    } as QNotifyOptions)
+    console.error('Camera error:', err)
   }
-})
+}
 </script>

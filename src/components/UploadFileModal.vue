@@ -5,7 +5,7 @@
        <!-- need proper url/endpoint -->
        <!-- add accept='' property to restrict the type of file to upload -->
       <q-uploader
-        label="Upload File"
+        label="Upload From File"
         url="http://localhost:4444/upload"
         style="width: 300px"
       />
