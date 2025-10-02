@@ -1,5 +1,13 @@
 <template>
   <div>Clients component</div>
+  <div v-for="client in clients" :key="client.clientId">
+    <p>{{ client.name }}</p>
+    <p>{{ client.imgUrl }}</p>
+    <div v-for="partner in client.integrationPartners" :key="partner.credentialId">
+      <p>Type: {{ partner.type }}</p>
+      <p>Credential ID: {{ partner.credentialId }}</p>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -34,6 +42,7 @@ onMounted(async () => {
     })
     .then((response) => {
       console.log(response.data);
+      clients.value = response.data.clients;
     })
     .catch((error) => {
       console.error('Error fetching data:', error);
