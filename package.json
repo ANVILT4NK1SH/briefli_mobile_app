@@ -15,7 +15,9 @@
     "postinstall": "quasar prepare"
   },
   "dependencies": {
+    "@auth0/auth0-vue": "^2.4.0",
     "@quasar/extras": "^1.16.4",
+    "axios": "^1.12.2",
     "quasar": "^2.16.0",
     "vue": "^3.5.20",
     "vue-router": "^4.0.12"

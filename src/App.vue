@@ -1,8 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-
-    <q-header elevated class="bg-primary text-white" height-hint="98">
-    </q-header>
+    <q-header elevated class="bg-primary text-white" height-hint="98"> </q-header>
 
     <q-page-container>
       <router-view />
@@ -10,11 +8,11 @@
 
     <q-footer reveal elevated>
       <q-toolbar>
-          <q-btn stack to="/home" label="Home" icon="home" />
-          <q-btn stack to="/clients" label="Clients" icon="group" />
-          <q-btn stack label="Upload" @click="displayModal = true" icon="upload" />
-          <q-btn stack to="/review" label="Review" icon="description" />
-          <q-btn stack to="/briefliAI" label="Briefli AI" icon="flare" />
+        <q-btn stack to="/home" label="Home" icon="home" />
+        <q-btn stack to="/clients" label="Clients" icon="group" />
+        <q-btn stack label="Upload" @click="displayModal = true" icon="upload" />
+        <q-btn stack to="/review" label="Review" icon="description" />
+        <q-btn stack to="/briefliAI" label="Briefli AI" icon="flare" />
       </q-toolbar>
 
       <q-dialog v-model="displayModal">
@@ -29,7 +27,6 @@
         <UploadFileModal @close="displayUploadFileModal = false" />
       </q-dialog>
     </q-footer>
-
   </q-layout>
 </template>
 
@@ -39,9 +36,9 @@ import UploadPhotoModal from './components/UploadPhotoModal.vue';
 import UploadFileModal from './components/UploadFileModal.vue';
 import { ref } from 'vue';
 
-const displayModal= ref(false)
-const displayUploadPhotoModal= ref(false)
-const displayUploadFileModal= ref(false)
+const displayModal = ref(false);
+const displayUploadPhotoModal = ref(false);
+const displayUploadFileModal = ref(false);
 
 //receive values from UploadOption and open new modal
 function handleOpen(type: 'photo' | 'file') {
