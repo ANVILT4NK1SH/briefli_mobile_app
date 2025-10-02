@@ -5,7 +5,22 @@
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue';
 import axios from 'axios';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+
+interface Clients {
+  orgId: string;
+  clientId: string;
+  name: string;
+  imgUrl: string;
+  integrationPartners: IntegrationPartners[];
+}
+
+interface IntegrationPartners {
+  type: string;
+  credentialId: string;
+}
+
+const clients = ref<Clients[]>([]);
 
 onMounted(async () => {
   //fetch bearer token for API calls
