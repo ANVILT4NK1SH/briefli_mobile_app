@@ -1,13 +1,24 @@
 <template>
-  <div>Clients component</div>
-  <div v-for="client in clients" :key="client.clientId">
-    <p>{{ client.name }}</p>
-    <p>{{ client.imgUrl }}</p>
-    <div v-for="partner in client.integrationPartners" :key="partner.credentialId">
-      <p>Type: {{ partner.type }}</p>
-      <p>Credential ID: {{ partner.credentialId }}</p>
-    </div>
-  </div>
+  <q-card v-for="client in clients" :key="client.clientId" elevated class="q-mb-md">
+    <q-item>
+      <q-item-section left>
+        <q-avatar icon="apartment"></q-avatar>
+      </q-item-section>
+
+      <q-item-section>
+        <q-item-label>{{ client.name }}</q-item-label>
+        <q-item-section v-for="partner in client.integrationPartners" :key="partner.credentialId">
+          <q-item-label>Type: {{ partner.type }}</q-item-label>
+          <q-item-label caption lines="2">Credential ID: </q-item-label>
+          <q-item> {{ partner.credentialId }}</q-item>
+        </q-item-section>
+      </q-item-section>
+
+      <q-item-section side top>
+        <q-item-label caption>{{ client.clientId }}</q-item-label>
+      </q-item-section>
+    </q-item>
+  </q-card>
 </template>
 
 <script setup lang="ts">
