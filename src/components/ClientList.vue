@@ -1,21 +1,20 @@
 <template>
   <q-card v-for="client in clients" :key="client.clientId" elevated class="q-mb-md">
     <q-item>
-      <q-item-section left>
-        <q-avatar icon="apartment"></q-avatar>
-      </q-item-section>
+      <q-avatar icon="apartment" top left></q-avatar>
 
-      <q-item-section>
-        <q-item-label>{{ client.name }}</q-item-label>
-        <q-item-section v-for="partner in client.integrationPartners" :key="partner.credentialId">
+      <q-item-section top left>
+        <q-item-label class="text-h6">{{ client.name }}</q-item-label>
+        <div v-for="partner in client.integrationPartners" :key="partner.credentialId">
           <q-item-label>Type: {{ partner.type }}</q-item-label>
-          <q-item-label caption lines="2">Credential ID: </q-item-label>
+          <q-item-label caption lines="2">Organization ID: </q-item-label>
           <q-item> {{ partner.credentialId }}</q-item>
-        </q-item-section>
+        </div>
       </q-item-section>
 
-      <q-item-section side top>
-        <q-item-label caption>{{ client.clientId }}</q-item-label>
+      <q-item-section top right>
+        <q-item-label caption> Client ID: </q-item-label>
+        {{ client.clientId }}
       </q-item-section>
     </q-item>
   </q-card>
