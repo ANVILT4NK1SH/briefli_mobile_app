@@ -1,5 +1,21 @@
 <template>
   <div
+    v-if="isUploading"
+    class="q-pa-md text-primary flex flex-center column absolute-full z-top bg-accent text-h3"
+  >
+    Please wait for picture to upload!
+    <q-circular-progress indeterminate rounded size="50px" color="primary" class="q-ma-md z-top" />
+  </div>
+  <div v-else-if="isUploaded === true" class="q-pa-md bg-tranparentBlack flex flex-center column">
+    <q-btn
+      label="Take another Photo"
+      color="primary"
+      @click="takeNewPhoto"
+      style="padding: 1rem; margin: 1rem"
+    />
+  </div>
+  <div
+    v-else
     class="q-pa-md"
     style="display: flex; flex-direction: column; align-items: center; justify-content: center"
   >
@@ -45,8 +61,10 @@ const auth0 = useAuth0();
 const $q = useQuasar();
 const imageUrl = ref<string>('');
 const bearerToken = ref<string>('');
-const file = ref<File>();
-let filename: string = '';
+const file = ref<File | null>(null);
+const filename = ref('');
+const isUploaded = ref(false);
+const isUploading = ref(false);
 
 export interface Client {
   clientId: string;
@@ -79,13 +97,13 @@ const capturePhoto = async () => {
     });
 
     if (image.webPath) {
-      filename = `${Date.now()}`;
+      filename.value = `${Date.now()}`;
       imageUrl.value = image.webPath; // For preview
       // Convert URI to File (if needed)
       const response = await fetch(image.webPath);
       const blob = await response.blob();
 
-      file.value = new File([blob], `${filename}.jpg`, { type: 'image/jpeg' });
+      file.value = new File([blob], `${filename.value}.jpg`, { type: 'image/jpeg' });
       console.log('Captured image as File:', file);
 
       $q.notify({
@@ -102,8 +120,49 @@ const capturePhoto = async () => {
   }
 };
 
-const uploadPhoto = () => {
-  const clientId = clients.value.find((client) => client.name === selectedClient.value)!.clientId;
-  void uploadFile(filename, clientId, bearerToken.value, file.value!);
+const uploadPhoto = async () => {
+  isUploading.value = true;
+  try {
+    const clientId = ref('');
+    if (selectedClient.value) {
+      clientId.value = clients.value.find(
+        (client) => client.name === selectedClient.value,
+      )!.clientId;
+    }
+
+    const responseStatus = ref(
+      await uploadFile(filename.value, clientId.value, bearerToken.value, file.value!),
+    );
+    if (responseStatus.value === 200) {
+      $q.notify({
+        message: 'Photo uploaded',
+        color: 'positive',
+      } as QNotifyOptions);
+      isUploaded.value = true;
+      isUploading.value = false;
+    } else {
+      $q.notify({
+        message: 'Failed photo upload',
+        color: 'negative',
+      } as QNotifyOptions);
+      console.error('Response status:', responseStatus.value);
+      isUploading.value = false;
+    }
+  } catch (err: unknown) {
+    $q.notify({
+      message: 'Failed to upload photo',
+      color: 'negative',
+    } as QNotifyOptions);
+    console.error('Upload error:', err);
+    isUploading.value = false;
+  }
+};
+
+const takeNewPhoto = () => {
+  selectedClient.value = null;
+  imageUrl.value = '';
+  file.value = null;
+  filename.value = '';
+  isUploaded.value = false;
 };
 </script>

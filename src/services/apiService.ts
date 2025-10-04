@@ -15,16 +15,13 @@ export const uploadFile = async (
     },
   });
 
-  const formData = new FormData();
-  formData.append('file', file);
-
-  console.log(response.data.url);
-  const postResponse = await axios.post(response.data.url, formData, {
+  console.log('Signed Url:', response.data.url);
+  const putResponse = await axios.put(response.data.url, file, {
     headers: {
-      Authorization: `Bearer ${bearerToken}`,
-      'Content-Type': 'multipart/form-data',
+      'Content-Type': file.type,
     },
   });
 
-  console.log(postResponse);
+  console.log('response status:', putResponse.status);
+  return putResponse.status;
 };
