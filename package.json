@@ -16,6 +16,9 @@
   },
   "dependencies": {
     "@auth0/auth0-vue": "^2.4.0",
+    "@capacitor/camera": "^7.0.2",
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/filesystem": "^7.1.4",
     "@quasar/extras": "^1.16.4",
     "axios": "^1.12.2",
     "quasar": "^2.16.0",

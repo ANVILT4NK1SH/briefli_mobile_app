@@ -6,7 +6,7 @@
       <router-view />
     </q-page-container>
 
-    <q-footer reveal elevated>
+    <q-footer elevated>
       <q-toolbar>
         <q-btn stack to="/home" label="Home" icon="home" />
         <q-btn stack to="/clients" label="Clients" icon="group" />

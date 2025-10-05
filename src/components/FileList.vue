@@ -32,6 +32,7 @@
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue';
 import axios, { AxiosError } from 'axios';
+import { login } from 'src/services/authService';
 import { onMounted, ref, watch } from 'vue';
 
 interface Props {
@@ -50,6 +51,7 @@ const auth0 = useAuth0();
 
 onMounted(async () => {
   //fetch bearer token for API calls
+  console.log('here', process.env.API_URL);
 
   if (auth0.isLoading.value) {
     await new Promise<void>((resolve) => {
@@ -63,12 +65,7 @@ onMounted(async () => {
   }
 
   if (!auth0.isAuthenticated.value) {
-    await auth0.loginWithRedirect({
-      authorizationParams: {
-        audience: 'https://demo-api.project-onyx-test.com',
-        scope: 'openid profile email offline_access',
-      },
-    });
+    await login();
     return;
   }
 
