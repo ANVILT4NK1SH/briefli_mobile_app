@@ -6,7 +6,7 @@
     Please wait for picture to upload!
     <q-circular-progress indeterminate rounded size="50px" color="primary" class="q-ma-md z-top" />
   </div>
-  <div v-else-if="isUploaded === true" class="q-pa-md bg-tranparentBlack flex flex-center column">
+  <div v-else-if="isUploaded" class="q-pa-md bg-tranparentBlack flex flex-center column">
     <q-btn
       label="Take another Photo"
       color="primary"
@@ -40,7 +40,7 @@
       style="display: flex; flex-direction: column; align-items: center; justify-content: center"
     >
       <img :src="imageUrl" alt="Captured Image" style="max-width: 300px" />
-      <p style="color: white">FILENAME: {{ filename }}.jpg</p>
+      <p style="color: white">FILENAME: {{ filename }}</p>
       <q-btn label="Upload" color="primary" @click="uploadPhoto" />
     </div>
   </div>
@@ -53,6 +53,7 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import axios from 'axios';
 import { useAuth0 } from '@auth0/auth0-vue';
 import { uploadFile } from 'src/services/apiService';
+import type { Client } from './models';
 
 const selectedClient = ref(null);
 const clients = ref<Client[]>([]);
@@ -65,15 +66,6 @@ const file = ref<File | null>(null);
 const filename = ref('');
 const isUploaded = ref(false);
 const isUploading = ref(false);
-
-export interface Client {
-  clientId: string;
-  createdAt: string;
-  imgUrl: string;
-  integrationPartners: unknown[];
-  name: string;
-  orgId: string;
-}
 
 onMounted(async () => {
   bearerToken.value = await auth0.getAccessTokenSilently();
@@ -97,13 +89,14 @@ const capturePhoto = async () => {
     });
 
     if (image.webPath) {
-      filename.value = `${Date.now()}`;
+      //Error if filename ends in .jpg
+      filename.value = `${Date.now()}.png`;
       imageUrl.value = image.webPath; // For preview
       // Convert URI to File (if needed)
       const response = await fetch(image.webPath);
       const blob = await response.blob();
 
-      file.value = new File([blob], `${filename.value}.jpg`, { type: 'image/jpeg' });
+      file.value = new File([blob], `${filename.value}`, { type: 'image/png' });
       console.log('Captured image as File:', file);
 
       $q.notify({

@@ -1,8 +1,8 @@
-export interface Todo {
-  id: number;
-  content: string;
-}
-
-export interface Meta {
-  totalCount: number;
+export interface Client {
+  clientId: string;
+  createdAt: string;
+  imgUrl: string;
+  integrationPartners: unknown[];
+  name: string;
+  orgId: string;
 }
