@@ -1,10 +1,10 @@
 <template>
   <q-toolbar>
-    <q-btn @click="filterByStatus = 'PROCESSED'"> Review Needed </q-btn>
-    <q-btn @click="filterByStatus = 'INVALID'"> Unassigned </q-btn>
-    <q-btn @click="filterByStatus = 'EXPORTED'"> Exported </q-btn>
-    <q-btn @click="filterByStatus = 'ERROR'"> Failed </q-btn>
-    <q-btn @click="filterByStatus = ''"> All </q-btn>
+    <q-btn @click="filterByStatus = ['PROCESSED', 'INVALID', 'ERROR']"> Review Needed </q-btn>
+    <q-btn @click="filterByStatus = ['INVALID']"> Unassigned </q-btn>
+    <q-btn @click="filterByStatus = ['EXPORTED']"> Exported </q-btn>
+    <q-btn @click="filterByStatus = ['ERROR', 'INVALID']"> Failed </q-btn>
+    <q-btn @click="filterByStatus = ['']"> All </q-btn>
   </q-toolbar>
 
   <q-item v-for="file in filteredFiles" :key="file.fileName">
@@ -56,7 +56,7 @@ interface Props {
 }
 
 const files = ref<Props[]>([]);
-const filterByStatus = ref<string>();
+const filterByStatus = ref<string[]>();
 const auth0 = useAuth0();
 
 onMounted(async () => {
@@ -141,9 +141,10 @@ onMounted(async () => {
 });
 
 const filteredFiles = computed(() => {
-  if (!filterByStatus.value) {
-    return files.value; //if no filter, show all files
+  if (!filterByStatus.value || filterByStatus.value.length === 0) {
+    //if no filter or if array is empty, show all files
+    return files.value;
   }
-  return files.value.filter((file) => file.status === filterByStatus.value); //filter using value from click to set condition
+  return files.value.filter((file) => filterByStatus.value?.includes(file.status)); //filter using value/s from click to set condition
 });
 </script>
