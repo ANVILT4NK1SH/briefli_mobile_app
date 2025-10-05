@@ -1,6 +1,6 @@
 <template>
   <q-toolbar>
-    <!-- would it be better to make this toolbar its own component, or use a computed function -->
+    <!-- would it be better to make this toolbar its own component-->
     <q-btn @click="filterByStatus = statusReviewNeeded"> Review Needed </q-btn>
     <q-btn @click="filterByStatus = statusUnassigned"> Unassigned </q-btn>
     <q-btn @click="filterByStatus = statusOk"> Exported </q-btn>
