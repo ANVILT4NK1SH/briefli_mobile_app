@@ -1,10 +1,11 @@
 <template>
   <q-toolbar>
+    <!-- would it be better to make this toolbar its own component, or use a computed function -->
     <q-btn @click="filterByStatus = ['PROCESSED', 'INVALID', 'ERROR']"> Review Needed </q-btn>
     <q-btn @click="filterByStatus = ['INVALID']"> Unassigned </q-btn>
     <q-btn @click="filterByStatus = ['EXPORTED']"> Exported </q-btn>
     <q-btn @click="filterByStatus = ['ERROR']"> Failed </q-btn>
-    <q-btn @click="filterByStatus = ['']"> All </q-btn>
+    <q-btn @click="filterByStatus = ['PROCESSED', 'INVALID', 'ERROR', 'EXPORTED']"> All </q-btn>
   </q-toolbar>
 
   <q-item v-for="file in filteredFiles" :key="file.fileName">
