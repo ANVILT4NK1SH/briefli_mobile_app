@@ -14,6 +14,13 @@ interface Props {
 export const files = ref<Props[]>([]);
 export const filterByStatus = ref<string[]>();
 
+// utilize these refs to set statuses across application (place status string inside array, and import variable where needed)
+export const statusOk = ref<string[]>(['EXPORTED']);
+export const statusError = ref<string[]>(['ERROR']);
+export const statusReviewNeeded = ref<string[]>(['PROCESSED', 'INVALID', 'ERROR']);
+export const statusUnassigned = ref<string[]>(['INVALID']);
+export const statusAll = ref<string[]>(['PROCESSED', 'INVALID', 'ERROR', 'EXPORTED']);
+
 export const filteredFiles = computed(() => {
   console.log('file service');
   if (!filterByStatus.value || filterByStatus.value.length === 0) {

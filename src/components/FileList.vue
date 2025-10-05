@@ -1,11 +1,11 @@
 <template>
   <q-toolbar>
     <!-- would it be better to make this toolbar its own component, or use a computed function -->
-    <q-btn @click="filterByStatus = ['PROCESSED', 'INVALID', 'ERROR']"> Review Needed </q-btn>
-    <q-btn @click="filterByStatus = ['INVALID']"> Unassigned </q-btn>
-    <q-btn @click="filterByStatus = ['EXPORTED']"> Exported </q-btn>
-    <q-btn @click="filterByStatus = ['ERROR']"> Failed </q-btn>
-    <q-btn @click="filterByStatus = ['PROCESSED', 'INVALID', 'ERROR', 'EXPORTED']"> All </q-btn>
+    <q-btn @click="filterByStatus = statusReviewNeeded"> Review Needed </q-btn>
+    <q-btn @click="filterByStatus = statusUnassigned"> Unassigned </q-btn>
+    <q-btn @click="filterByStatus = statusOk"> Exported </q-btn>
+    <q-btn @click="filterByStatus = statusError"> Failed </q-btn>
+    <q-btn @click="filterByStatus = statusAll"> All </q-btn>
   </q-toolbar>
 
   <q-item v-for="file in filteredFiles" :key="file.fileName">
@@ -44,7 +44,16 @@ import { useAuth0 } from '@auth0/auth0-vue';
 import axios, { AxiosError } from 'axios';
 import { login } from 'src/services/authService';
 import { onMounted, watch } from 'vue';
-import { filteredFiles, filterByStatus, files } from 'src/services/fileService';
+import {
+  filteredFiles,
+  filterByStatus,
+  files,
+  statusAll,
+  statusError,
+  statusOk,
+  statusUnassigned,
+  statusReviewNeeded,
+} from 'src/services/fileService';
 
 const auth0 = useAuth0();
 
