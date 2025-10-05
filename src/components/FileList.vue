@@ -1,4 +1,12 @@
 <template>
+  <q-toolbar>
+    <q-button> Review Needed </q-button>
+    <q-button> Unassigned </q-button>
+    <q-button> Exported </q-button>
+    <q-button> Failed </q-button>
+    <q-button> All </q-button>
+  </q-toolbar>
+
   <q-item v-for="file in files" :key="file.fileName">
     <q-item-section side left>
       <q-avatar icon="description" />
