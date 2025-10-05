@@ -1,13 +1,13 @@
 <template>
   <q-toolbar>
-    <q-button> Review Needed </q-button>
-    <q-button> Unassigned </q-button>
-    <q-button> Exported </q-button>
-    <q-button> Failed </q-button>
-    <q-button> All </q-button>
+    <q-btn @click="filterByStatus = 'PROCESSED'"> Review Needed </q-btn>
+    <q-btn @click="filterByStatus = 'INVALID'"> Unassigned </q-btn>
+    <q-btn @click="filterByStatus = 'EXPORTED'"> Exported </q-btn>
+    <q-btn @click="filterByStatus = 'ERROR'"> Failed </q-btn>
+    <q-btn @click="filterByStatus = ''"> All </q-btn>
   </q-toolbar>
 
-  <q-item v-for="file in files" :key="file.fileName">
+  <q-item v-for="file in filteredFiles" :key="file.fileName">
     <q-item-section side left>
       <q-avatar icon="description" />
       <q-item-label>
@@ -26,8 +26,9 @@
         caption
         :class="{
           'bg-positive': file.status === 'EXPORTED',
-          'bg-negative': file.status === 'FAILED',
+          'bg-negative': file.status === 'ERROR',
           'bg-warning': file.status === 'PROCESSED',
+          'bg-info': file.status === 'INVALID',
         }"
       >
         {{ file.status }}
@@ -41,7 +42,7 @@
 import { useAuth0 } from '@auth0/auth0-vue';
 import axios, { AxiosError } from 'axios';
 import { login } from 'src/services/authService';
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 interface Props {
   fileName: string;
@@ -55,6 +56,7 @@ interface Props {
 }
 
 const files = ref<Props[]>([]);
+const filterByStatus = ref<string>();
 const auth0 = useAuth0();
 
 onMounted(async () => {
@@ -136,5 +138,12 @@ onMounted(async () => {
   //   .catch((error) => {
   //     console.error('Error fetching data:', error);
   //   });
+});
+
+const filteredFiles = computed(() => {
+  if (!filterByStatus.value) {
+    return files.value; //if no filter, show all files
+  }
+  return files.value.filter((file) => file.status === filterByStatus.value); //filter using value from click to set condition
 });
 </script>
