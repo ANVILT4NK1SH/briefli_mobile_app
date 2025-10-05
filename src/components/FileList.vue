@@ -42,9 +42,10 @@
 import { useAuth0 } from '@auth0/auth0-vue';
 import axios, { AxiosError } from 'axios';
 import { login } from 'src/services/authService';
-import { computed, onMounted, ref, watch } from 'vue';
+import { /* computed, */ onMounted, /* ref, */ watch } from 'vue';
+import { filteredFiles, filterByStatus, files } from 'src/services/fileService';
 
-interface Props {
+/* interface Props {
   fileName: string;
   displayName: string;
   status: string;
@@ -56,7 +57,7 @@ interface Props {
 }
 
 const files = ref<Props[]>([]);
-const filterByStatus = ref<string[]>();
+const filterByStatus = ref<string[]>(); */
 const auth0 = useAuth0();
 
 onMounted(async () => {
@@ -140,11 +141,11 @@ onMounted(async () => {
   //   });
 });
 
-const filteredFiles = computed(() => {
+/* const filteredFiles = computed(() => {
   if (!filterByStatus.value || filterByStatus.value.length === 0) {
     //if no filter or if array is empty, show all files
     return files.value;
   }
   return files.value.filter((file) => filterByStatus.value?.includes(file.status)); //filter using value/s from click to set condition
-});
+}); */
 </script>
