@@ -3,7 +3,7 @@
     <q-btn @click="filterByStatus = ['PROCESSED', 'INVALID', 'ERROR']"> Review Needed </q-btn>
     <q-btn @click="filterByStatus = ['INVALID']"> Unassigned </q-btn>
     <q-btn @click="filterByStatus = ['EXPORTED']"> Exported </q-btn>
-    <q-btn @click="filterByStatus = ['ERROR', 'INVALID']"> Failed </q-btn>
+    <q-btn @click="filterByStatus = ['ERROR']"> Failed </q-btn>
     <q-btn @click="filterByStatus = ['']"> All </q-btn>
   </q-toolbar>
 
