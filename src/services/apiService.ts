@@ -1,27 +1,37 @@
 import axios from 'axios';
+import { authService } from './authService';
 
-export const uploadFile = async (
-  filename: string,
-  clientId: string,
-  bearerToken: string,
-  file: File,
-) => {
-  const response = await axios.get(`${process.env.API_URL}/signedUrl`, {
-    headers: { Authorization: `Bearer ${bearerToken}` },
-    params: {
-      filename,
-      configuring: false,
-      clientId,
-    },
-  });
+export const apiService = {
+  async uploadFile(filename: string, clientId: string, file: File) {
+    const token = await authService.getBearerToken();
 
-  console.log('Signed Url:', response.data.url);
-  const putResponse = await axios.put(response.data.url, file, {
-    headers: {
-      'Content-Type': file.type,
-    },
-  });
+    const response = await axios.get(`${process.env.API_URL}/signedUrl`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: {
+        filename,
+        configuring: false,
+        clientId,
+      },
+    });
 
-  console.log('response status:', putResponse.status);
-  return putResponse.status;
+    console.log('Signed Url:', response.data.url);
+    const putResponse = await axios.put(response.data.url, file, {
+      headers: {
+        'Content-Type': file.type,
+      },
+    });
+
+    console.log('response status:', putResponse.status);
+    return putResponse.status;
+  },
+
+  async getFiles() {
+    const token = await authService.getBearerToken();
+
+    const response = await axios.get(`${process.env.API_URL}/file`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return response;
+  },
 };

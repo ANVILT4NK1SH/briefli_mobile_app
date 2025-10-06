@@ -1,10 +1,11 @@
 <template>
   <div
     v-if="isUploading"
-    class="q-pa-md text-primary flex flex-center column absolute-full z-top bg-accent text-h3"
+    class="q-pa-xl text-primary flex flex-center column z-top bg-accent text-h3 text-center"
   >
     Please wait for file to upload!
-    <q-circular-progress indeterminate rounded size="50px" color="primary" class="q-ma-md z-top" />
+    <q-img src="img\logos\briefli-reveal-light.gif" />
+    <!-- <q-circular-progress indeterminate rounded size="50px" color="primary" class="q-ma-md z-top" /> -->
   </div>
   <div v-else-if="isUploaded" class="q-pa-md column flex flex-center column">
     <q-btn
@@ -21,7 +22,7 @@
       label="Select Client"
       clearable
       use-input
-      style="padding: 0.5rem; margin: 1rem; background-color: white; border-radius: 3px"
+      style="padding: 0.5rem; background-color: white; border-radius: 3px"
     />
     <q-file
       class="q-pa-md q-ma-md bg-white text-subtitle1 text-primary"
@@ -46,33 +47,23 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { QFile, useQuasar } from 'quasar';
-import { useAuth0 } from '@auth0/auth0-vue';
+import { apiService } from 'src/services/apiService';
+import { getClients } from 'src/services/clientService';
 import type { Client } from './models';
 import type { QNotifyOptions } from 'quasar';
-import axios from 'axios';
-import { uploadFile } from 'src/services/apiService';
 
 const selectedFile = ref<File | null>(null);
 const selectedClient = ref(null);
 const clients = ref<Client[]>([]);
 const clientNames = ref<string[]>([]);
-const auth0 = useAuth0();
 const $q = useQuasar();
-const bearerToken = ref<string>('');
 const file = ref<File | null>(null);
 const filename = ref('');
 const isUploaded = ref(false);
 const isUploading = ref(false);
 
 onMounted(async () => {
-  bearerToken.value = await auth0.getAccessTokenSilently();
-  console.log(bearerToken.value);
-
-  const response = await axios.get(`${process.env.API_URL}/org/clients`, {
-    headers: { Authorization: `Bearer ${bearerToken.value}` },
-  });
-  console.log(response.data.clients);
-  clients.value = response.data.clients;
+  clients.value = await getClients();
   clientNames.value = clients.value.map((client) => client.name);
 });
 
@@ -95,7 +86,7 @@ const uploadSelectedFile = async () => {
     }
 
     const responseStatus = ref(
-      await uploadFile(filename.value, clientId.value, bearerToken.value, file.value!),
+      await apiService.uploadFile(filename.value, clientId.value, file.value!),
     );
     if (responseStatus.value === 200) {
       $q.notify({

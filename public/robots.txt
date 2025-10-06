@@ -1,0 +1,8 @@
+User-agent: PopeTech-CrawlBot
+Disallow:
+
+User-agent: PopeTech-ScanBot
+Disallow:
+
+User-agent: *
+Disallow: /
