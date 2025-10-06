@@ -1,5 +1,14 @@
 <template>
-  <q-item v-for="file in files" :key="file.fileName">
+  <q-toolbar>
+    <!-- would it be better to make this toolbar its own component-->
+    <q-btn @click="filterByStatus = statusReviewNeeded"> Review Needed </q-btn>
+    <q-btn @click="filterByStatus = statusUnassigned"> Unassigned </q-btn>
+    <q-btn @click="filterByStatus = statusOk"> Exported </q-btn>
+    <q-btn @click="filterByStatus = statusError"> Failed </q-btn>
+    <q-btn @click="filterByStatus = statusAll"> All </q-btn>
+  </q-toolbar>
+
+  <q-item v-for="file in filteredFiles" :key="file.fileName">
     <q-item-section side left>
       <q-avatar icon="description" />
       <q-item-label>
@@ -18,8 +27,9 @@
         caption
         :class="{
           'bg-positive': file.status === 'EXPORTED',
-          'bg-negative': file.status === 'FAILED',
+          'bg-negative': file.status === 'ERROR',
           'bg-warning': file.status === 'PROCESSED',
+          'bg-info': file.status === 'INVALID',
         }"
       >
         {{ file.status }}
@@ -33,20 +43,18 @@
 import { useAuth0 } from '@auth0/auth0-vue';
 import axios, { AxiosError } from 'axios';
 import { login } from 'src/services/authService';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, watch } from 'vue';
+import {
+  filteredFiles,
+  filterByStatus,
+  files,
+  statusAll,
+  statusError,
+  statusOk,
+  statusUnassigned,
+  statusReviewNeeded,
+} from 'src/services/fileService';
 
-interface Props {
-  fileName: string;
-  displayName: string;
-  status: string;
-  createdAt: string;
-  processedAt: string;
-  orgId: string;
-  fileSize: string;
-  documentTypes: string[];
-}
-
-const files = ref<Props[]>([]);
 const auth0 = useAuth0();
 
 onMounted(async () => {
