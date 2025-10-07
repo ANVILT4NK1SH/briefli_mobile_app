@@ -6,7 +6,7 @@ export default defineBoot(({ app, router }) => {
   const signupEmail = urlParams.get('email');
   const authParams: AuthorizationParams = {
     redirect_uri: `${window.location.origin}/callback`,
-    audience: 'https://demo-api.project-onyx-test.com',
+    audience: `${process.env.API_URL}`,
     prompt: 'login',
   };
   if (isSignup) authParams.screen_hint = 'signup';

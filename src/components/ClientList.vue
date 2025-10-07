@@ -1,7 +1,7 @@
 <template>
   <q-card v-for="client in clients" :key="client.clientId" elevated class="q-mb-md">
     <q-item>
-      <q-avatar icon="apartment" top left></q-avatar>
+      <q-avatar top left><img src="client.imgUrl" alt="Client Icon" /></q-avatar>
 
       <q-item-section top left>
         <q-item-label class="text-h6">{{ client.name }}</q-item-label>
@@ -21,41 +21,13 @@
 </template>
 
 <script setup lang="ts">
-import { useAuth0 } from '@auth0/auth0-vue';
-import axios from 'axios';
+import { getClients } from 'src/services/clientService';
 import { onMounted, ref } from 'vue';
+import type { Client } from './models';
 
-interface Clients {
-  orgId: string;
-  clientId: string;
-  name: string;
-  imgUrl: string;
-  integrationPartners: IntegrationPartners[];
-}
-
-interface IntegrationPartners {
-  type: string;
-  credentialId: string;
-}
-
-const clients = ref<Clients[]>([]);
+const clients = ref<Client[]>([]);
 
 onMounted(async () => {
-  //fetch bearer token for API calls
-  const auth0 = useAuth0();
-
-  const bearerToken = await auth0.getAccessTokenSilently();
-
-  axios
-    .get('https://demo-api.project-onyx-test.com/org/clients', {
-      headers: { Authorization: `Bearer ${bearerToken}` },
-    })
-    .then((response) => {
-      console.log(response.data);
-      clients.value = response.data.clients;
-    })
-    .catch((error) => {
-      console.error('Error fetching data:', error);
-    });
+  clients.value = await getClients();
 });
 </script>
