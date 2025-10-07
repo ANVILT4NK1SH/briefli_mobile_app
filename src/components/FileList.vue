@@ -26,33 +26,39 @@
   </q-toolbar>
 
   <q-item v-for="file in filteredFiles" :key="file.fileName">
-    <q-item-section side left>
-      <q-avatar icon="description" />
-      <q-item-label>
-        {{ file.documentTypes[0] }}
-      </q-item-label>
-    </q-item-section>
+    <div
+      class="flex row items-center"
+      style="width: 100%"
+      @click="showDocument(file.fileName, file.rotations)"
+    >
+      <q-item-section side left>
+        <q-avatar icon="description" />
+        <q-item-label>
+          {{ file.documentTypes[0] }}
+        </q-item-label>
+      </q-item-section>
 
-    <q-item-section>
-      <q-item-label>{{ file.displayName }}</q-item-label>
-      <q-item-label caption>{{ getClientName(file.clientId) }}</q-item-label>
-    </q-item-section>
+      <q-item-section>
+        <q-item-label>{{ file.displayName }}</q-item-label>
+        <q-item-label caption>{{ getClientName(file.clientId) }}</q-item-label>
+      </q-item-section>
 
-    <q-item-section side top>
-      <!-- UNSURE OF ALL POSSIBLE STATUS CODES; failed, review etc? -->
-      <q-item-label
-        caption
-        :class="{
-          'bg-positive': file.status === 'EXPORTED',
-          'bg-negative': file.status === 'ERROR',
-          'bg-warning': file.status === 'PROCESSED',
-          'bg-info': file.status === 'INVALID',
-        }"
-      >
-        {{ file.status }}
-      </q-item-label>
-    </q-item-section>
-    <q-separator spaced inset />
+      <q-item-section side top>
+        <!-- UNSURE OF ALL POSSIBLE STATUS CODES; failed, review etc? -->
+        <q-item-label
+          caption
+          :class="{
+            'bg-positive': file.status === 'EXPORTED',
+            'bg-negative': file.status === 'ERROR',
+            'bg-warning': file.status === 'PROCESSED',
+            'bg-info': file.status === 'INVALID',
+          }"
+        >
+          {{ file.status }}
+        </q-item-label>
+      </q-item-section>
+      <q-separator spaced inset />
+    </div>
   </q-item>
 </template>
 
@@ -113,5 +119,11 @@ const getClientName = (clientId: string) => {
   }
 
   return '';
+};
+
+const showDocument = async (filename: string, rotations: number[]) => {
+  const document = await apiService.getDocument(filename, rotations);
+
+  console.log('Pdf object: ', document);
 };
 </script>

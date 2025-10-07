@@ -31,7 +31,25 @@ export const apiService = {
     const response = await axios.get(`${process.env.API_URL}/file`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-
     return response;
+  },
+
+  async getDocument(filename: string, rotations: number[]) {
+    const token = await authService.getBearerToken();
+
+    const response = await axios.get(`${process.env.API_URL}/signedDownloadUrl`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: {
+        filename,
+        rotations,
+      },
+    });
+
+    console.log('signedDownloadUrl response: ', response);
+
+    const document = await axios.get(response.data.url);
+
+    console.log('Document: ', document);
+    return document.data;
   },
 };
