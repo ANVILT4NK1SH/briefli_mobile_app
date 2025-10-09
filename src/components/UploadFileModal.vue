@@ -82,10 +82,13 @@ onMounted(async () => {
 });
 
 const onFileSelected = () => {
+  //check type of file
   showPdfModal.value = true;
   file.value = selectedFile.value;
   if (file.value) {
     filename.value = file.value.name;
+    const blob = new Blob([file.value], { type: 'application/pdf' });
+    pdfUrl.value = window.URL.createObjectURL(blob);
     console.log('File selected:', filename);
   }
 };
