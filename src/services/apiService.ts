@@ -47,9 +47,12 @@ export const apiService = {
 
     console.log('signedDownloadUrl response: ', response);
 
-    const document = await axios.get(response.data.url);
+    const document = await axios.get(response.data.url, {
+      responseType: 'blob',
+    });
 
-    console.log('Document: ', document);
-    return document.data;
+    //assign blob data to url for use in component
+    const blob = new Blob([document.data], { type: 'application/pdf' });
+    return window.URL.createObjectURL(blob);
   },
 };
