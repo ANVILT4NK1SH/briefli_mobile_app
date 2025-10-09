@@ -22,7 +22,6 @@
           :disabled="!pdfUrl"
           class="download-btn"
         />
-        <q-btn icon="fullscreen" flat dense @click="toggleFullscreen" v-if="showFullscreenButton" />
       </div>
     </div>
 
