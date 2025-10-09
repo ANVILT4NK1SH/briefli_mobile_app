@@ -6,8 +6,8 @@
       <router-view />
     </q-page-container>
 
-    <q-footer elevated>
-      <q-toolbar>
+    <q-footer elevated style="padding: 0; margin-bottom: 0">
+      <q-toolbar class="justify-center" style="padding: 0; margin-bottom: 0">
         <q-btn stack to="/home" label="Home" icon="home" />
         <q-btn stack to="/clients" label="Clients" icon="group" />
         <q-btn stack label="Upload" @click="displayModal = true" icon="upload" />

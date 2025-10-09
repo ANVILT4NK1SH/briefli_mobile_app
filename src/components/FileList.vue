@@ -1,5 +1,5 @@
 <template>
-  <q-toolbar class="q-pa-sm flex items-center items-stretch bg-primary">
+  <q-toolbar class="q-pa-sm items-stretch bg-primary justify-center">
     <!-- would it be better to make this toolbar its own component-->
     <q-btn
       style="background-color: white"
@@ -25,7 +25,7 @@
     </q-btn>
   </q-toolbar>
 
-  <q-item v-for="file in filteredFiles" :key="file.fileName">
+  <q-item v-for="file in filteredFiles" :key="file.fileName" class="justify-center">
     <q-item-section side left>
       <q-avatar icon="description" />
       <q-item-label>
@@ -33,9 +33,9 @@
       </q-item-label>
     </q-item-section>
 
-    <q-item-section>
-      <q-item-label>{{ file.displayName }}</q-item-label>
-      <q-item-label caption>{{ getClientName(file.clientId) }}</q-item-label>
+    <q-item-section class="items-center">
+      <q-item-label class="text-center">{{ file.displayName }}</q-item-label>
+      <q-item-label caption class="text-center">{{ getClientName(file.clientId) }}</q-item-label>
     </q-item-section>
 
     <q-item-section side top>
