@@ -18,10 +18,15 @@ export const authService = {
 
   // Function to initialize and fetch the bearer token
   async initializeBearerToken(): Promise<string> {
-    const auth0 = useAuth0();
+    let auth0 = useAuth0();
     // Check if user is authenticated
+    if (!auth0) {
+      do {
+        auth0 = useAuth0();
+      } while (!auth0);
+    }
     if (!auth0.isAuthenticated.value) {
-      throw new Error('User is not authenticated');
+      await login();
     }
 
     try {

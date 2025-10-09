@@ -44,9 +44,9 @@
         caption
         :class="{
           'bg-positive': file.status === 'EXPORTED',
-          'bg-negative': file.status === 'ERROR',
-          'bg-warning': file.status === 'PROCESSED',
-          'bg-info': file.status === 'INVALID',
+          'bg-negative': file.status === 'ERROR' || file.status === 'INVALID',
+          'bg-warning': file.status === 'REJECTED',
+          'bg-info': file.status === 'PROCESSED',
         }"
       >
         {{ file.status }}

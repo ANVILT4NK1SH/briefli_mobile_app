@@ -20,14 +20,18 @@
 
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue';
+import { login } from 'src/services/authService';
 import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 onMounted(async () => {
   const auth0 = useAuth0(); //from package
 
   // check if user is logged in
   if (!auth0?.user?.value) {
-    await auth0.loginWithRedirect();
+    await login();
+  } else {
+    await useRouter().push('/home');
   }
 });
 </script>
