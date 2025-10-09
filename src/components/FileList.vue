@@ -114,4 +114,10 @@ const getClientName = (clientId: string) => {
 
   return '';
 };
+
+const showDocument = async (filename: string, rotations: number[]) => {
+  const document = await apiService.getDocument(filename, rotations);
+
+  console.log('Pdf object: ', document);
+};
 </script>

@@ -21,5 +21,6 @@ export interface ImportedDocument {
   orgId: string;
   clientId: string;
   fileSize: string;
+  rotations: number[];
   documentTypes: string[];
 }
