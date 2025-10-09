@@ -25,6 +25,18 @@
     </q-btn>
   </q-toolbar>
 
+  <!-- PDF Modal -->
+  <q-dialog v-model="showPdfModal" full-width maximized>
+    <PdfViewer
+      :pdf-url="pdfUrl"
+      :file-name="currentFileName"
+      :is-loading="isLoading"
+      :show-close-button="true"
+      @close="closePreview"
+    />
+  </q-dialog>
+
+  <!-- File List -->
   <q-item v-for="file in filteredFiles" :key="file.fileName">
     <div
       class="flex row items-center"
@@ -79,9 +91,15 @@ import {
 import { apiService } from 'src/services/apiService';
 import type { Client } from './models';
 import { getClients } from 'src/services/clientService';
+import PdfViewer from './PdfViewer.vue';
+import { onUnmounted } from 'vue';
 
 const auth0 = useAuth0();
 const clients = ref<Client[]>([]);
+const pdfUrl = ref<string>('');
+const showPdfModal = ref<boolean>(false);
+const isLoading = ref<boolean>(false);
+const currentFileName = ref<string>('');
 
 onMounted(async () => {
   if (auth0.isLoading.value) {
@@ -104,7 +122,6 @@ onMounted(async () => {
     const response = await apiService.getFiles();
     files.value = response.data;
     clients.value = await getClients();
-
     console.log('Files fetched:');
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -122,8 +139,43 @@ const getClientName = (clientId: string) => {
 };
 
 const showDocument = async (filename: string, rotations: number[]) => {
-  const document = await apiService.getDocument(filename, rotations);
+  isLoading.value = true;
+  currentFileName.value = filename;
 
-  console.log('Pdf object: ', document);
+  try {
+    // Clean up previous URL if exists
+    if (pdfUrl.value) {
+      window.URL.revokeObjectURL(pdfUrl.value);
+    }
+
+    pdfUrl.value = await apiService.getDocument(filename, rotations);
+    console.log('PDF loaded:', filename);
+
+    // Show modal after PDF URL is set
+    showPdfModal.value = true;
+  } catch (error) {
+    console.error('Error loading document:', error);
+    // You might want to show a notification here
+  } finally {
+    isLoading.value = false;
+  }
 };
+
+const closePreview = () => {
+  showPdfModal.value = false;
+  currentFileName.value = '';
+
+  // Clean up URL when preview is closed
+  if (pdfUrl.value) {
+    window.URL.revokeObjectURL(pdfUrl.value);
+    pdfUrl.value = '';
+  }
+};
+
+// Clean up when component unmounts
+onUnmounted(() => {
+  if (pdfUrl.value) {
+    window.URL.revokeObjectURL(pdfUrl.value);
+  }
+});
 </script>
