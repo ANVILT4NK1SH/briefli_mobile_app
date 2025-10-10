@@ -1,30 +1,4 @@
 <template>
-  <q-toolbar class="q-pa-sm items-stretch bg-primary justify-center">
-    <!-- would it be better to make this toolbar its own component-->
-    <q-btn
-      style="background-color: white"
-      padding="xs lg"
-      @click="filterByStatus = statusReviewNeeded"
-    >
-      Review Needed
-    </q-btn>
-    <q-btn
-      style="background-color: white"
-      padding="xs lg"
-      @click="filterByStatus = statusUnassigned"
-      >Unassigned</q-btn
-    >
-    <q-btn style="background-color: white" padding="xs lg" @click="filterByStatus = statusOk">
-      Exported
-    </q-btn>
-    <q-btn style="background-color: white" padding="xs lg" @click="filterByStatus = statusError">
-      Failed
-    </q-btn>
-    <q-btn style="background-color: white" padding="xs lg" @click="filterByStatus = statusAll">
-      All
-    </q-btn>
-  </q-toolbar>
-
   <!-- PDF Modal -->
   <q-dialog v-model="showPdfModal" full-width maximized>
     <PdfViewer
@@ -36,42 +10,77 @@
     />
   </q-dialog>
 
-  <!-- File List -->
-  <q-item v-for="file in filteredFiles" :key="file.fileName" class="justify-center">
-    <div
-      class="flex row items-center justfy-center"
-      style="width: 100%"
-      @click="showDocument(file.fileName, file.rotations)"
-    >
-      <q-item-section side left>
-        <q-avatar icon="description" />
-        <q-item-label>
-          {{ !file.documentTypes[0] ? 'Unknown' : file.documentTypes[0] }}
-        </q-item-label>
-      </q-item-section>
+  <q-page-container style="padding-top: 3.5rem">
+    <!-- File List -->
+    <q-item v-for="file in filteredFiles" :key="file.fileName" class="justify-center">
+      <div
+        class="flex row items-center justfy-center"
+        style="width: 100%"
+        @click="showDocument(file.fileName, file.rotations)"
+      >
+        <q-item-section side left>
+          <q-avatar icon="description" />
+          <q-item-label>
+            {{ !file.documentTypes[0] ? 'Unknown' : file.documentTypes[0] }}
+          </q-item-label>
+        </q-item-section>
 
-      <q-item-section class="items-center">
-        <q-item-label class="text-center">{{ file.displayName }}</q-item-label>
-        <q-item-label caption class="text-center">{{ getClientName(file.clientId) }}</q-item-label>
-      </q-item-section>
+        <q-item-section class="items-center">
+          <q-item-label class="text-center">{{ file.displayName }}</q-item-label>
+          <q-item-label caption class="text-center">{{
+            getClientName(file.clientId)
+          }}</q-item-label>
+        </q-item-section>
 
-      <q-item-section side top>
-        <!-- UNSURE OF ALL POSSIBLE STATUS CODES; failed, review etc? -->
-        <q-item-label
-          caption
-          :class="{
-            'bg-positive': file.status === 'EXPORTED',
-            'bg-negative': file.status === 'ERROR' || file.status === 'INVALID',
-            'bg-warning': file.status === 'REJECTED',
-            'bg-info': file.status === 'PROCESSED',
-          }"
+        <q-item-section side top>
+          <!-- UNSURE OF ALL POSSIBLE STATUS CODES; failed, review etc? -->
+          <q-item-label
+            caption
+            :class="{
+              'bg-positive': file.status === 'EXPORTED',
+              'bg-negative': file.status === 'ERROR' || file.status === 'INVALID',
+              'bg-warning': file.status === 'REJECTED',
+              'bg-info': file.status === 'PROCESSED',
+            }"
+          >
+            {{ file.status }}
+          </q-item-label>
+        </q-item-section>
+      </div>
+    </q-item>
+
+    <q-page-sticky expand position="top">
+      <q-toolbar class="q-pa-sm items-stretch bg-primary justify-center z-top">
+        <!-- would it be better to make this toolbar its own component-->
+        <q-btn
+          style="background-color: white"
+          padding="xs lg"
+          @click="filterByStatus = statusReviewNeeded"
         >
-          {{ file.status }}
-        </q-item-label>
-      </q-item-section>
-      <q-separator spaced inset />
-    </div>
-  </q-item>
+          Review Needed
+        </q-btn>
+        <q-btn
+          style="background-color: white"
+          padding="xs lg"
+          @click="filterByStatus = statusUnassigned"
+          >Unassigned</q-btn
+        >
+        <q-btn style="background-color: white" padding="xs lg" @click="filterByStatus = statusOk">
+          Exported
+        </q-btn>
+        <q-btn
+          style="background-color: white"
+          padding="xs lg"
+          @click="filterByStatus = statusError"
+        >
+          Failed
+        </q-btn>
+        <q-btn style="background-color: white" padding="xs lg" @click="filterByStatus = statusAll">
+          All
+        </q-btn>
+      </q-toolbar>
+    </q-page-sticky>
+  </q-page-container>
 </template>
 
 <script setup lang="ts">
