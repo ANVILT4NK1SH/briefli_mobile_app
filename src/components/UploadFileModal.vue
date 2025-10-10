@@ -34,6 +34,15 @@
       accept=".pdf,image/*"
       @update:model-value="onFileSelected"
     />
+    <div v-if="showPdfModal" class="container q-pa-lg">
+      <PdfViewer
+        :pdf-url="pdfUrl"
+        :file-name="currentFileName"
+        :is-loading="isLoading"
+        :show-close-button="true"
+        @close="closePreview"
+      />
+    </div>
     <q-btn
       v-if="selectedFile"
       class="q-pa-lg q-ma-md"
@@ -51,6 +60,7 @@ import { apiService } from 'src/services/apiService';
 import { getClients } from 'src/services/clientService';
 import type { Client } from './models';
 import type { QNotifyOptions } from 'quasar';
+import PdfViewer from './PdfViewer.vue';
 
 const selectedFile = ref<File | null>(null);
 const selectedClient = ref(null);
@@ -61,6 +71,10 @@ const file = ref<File | null>(null);
 const filename = ref('');
 const isUploaded = ref(false);
 const isUploading = ref(false);
+const pdfUrl = ref<string>('');
+const isLoading = ref<boolean>(false);
+const currentFileName = ref<string>('');
+const showPdfModal = ref<boolean>(false);
 
 onMounted(async () => {
   clients.value = await getClients();
@@ -68,9 +82,13 @@ onMounted(async () => {
 });
 
 const onFileSelected = () => {
+  //check type of file
+  showPdfModal.value = true;
   file.value = selectedFile.value;
   if (file.value) {
     filename.value = file.value.name;
+    const blob = new Blob([file.value], { type: 'application/pdf' });
+    pdfUrl.value = window.URL.createObjectURL(blob);
     console.log('File selected:', filename);
   }
 };
@@ -112,6 +130,18 @@ const uploadSelectedFile = async () => {
     isUploading.value = false;
   }
 };
+
+const closePreview = () => {
+  showPdfModal.value = false;
+  currentFileName.value = '';
+
+  // Clean up URL when preview is closed
+  if (pdfUrl.value) {
+    window.URL.revokeObjectURL(pdfUrl.value);
+    pdfUrl.value = '';
+  }
+};
+
 const selectAnotherFile = () => {
   selectedClient.value = null;
   file.value = null;
