@@ -113,22 +113,22 @@ const downloadPdf = () => {
   emit('download', props.pdfUrl);
 };
 
-const toggleFullscreen = async () => {
-  if (!pdfIframe.value) return;
+// const toggleFullscreen = async () => {
+//   if (!pdfIframe.value) return;
 
-  try {
-    if (!document.fullscreenElement) {
-      // Enter fullscreen
-      await pdfIframe.value.requestFullscreen();
-    } else {
-      // Exit fullscreen
-      await document.exitFullscreen();
-    }
-  } catch (error) {
-    console.warn('Fullscreen operation failed:', error);
-    // You can optionally show a user-friendly message here
-  }
-};
+//   try {
+//     if (!document.fullscreenElement) {
+//       // Enter fullscreen
+//       await pdfIframe.value.requestFullscreen();
+//     } else {
+//       // Exit fullscreen
+//       await document.exitFullscreen();
+//     }
+//   } catch (error) {
+//     console.warn('Fullscreen operation failed:', error);
+//     // You can optionally show a user-friendly message here
+//   }
+// };
 
 // Clean up when component unmounts
 import { onUnmounted } from 'vue';

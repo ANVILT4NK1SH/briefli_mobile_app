@@ -46,30 +46,31 @@
       <q-item-section side left>
         <q-avatar icon="description" />
         <q-item-label>
-          {{ file.documentTypes[0] }}
+          {{ !file.documentTypes[0] ? 'Unknown' : file.documentTypes[0] }}
         </q-item-label>
       </q-item-section>
 
-    <q-item-section class="items-center">
-      <q-item-label class="text-center">{{ file.displayName }}</q-item-label>
-      <q-item-label caption class="text-center">{{ getClientName(file.clientId) }}</q-item-label>
-    </q-item-section>
+      <q-item-section class="items-center">
+        <q-item-label class="text-center">{{ file.displayName }}</q-item-label>
+        <q-item-label caption class="text-center">{{ getClientName(file.clientId) }}</q-item-label>
+      </q-item-section>
 
-    <q-item-section side top>
-      <!-- UNSURE OF ALL POSSIBLE STATUS CODES; failed, review etc? -->
-      <q-item-label
-        caption
-        :class="{
-          'bg-positive': file.status === 'EXPORTED',
-          'bg-negative': file.status === 'ERROR' || file.status === 'INVALID',
-          'bg-warning': file.status === 'REJECTED',
-          'bg-info': file.status === 'PROCESSED',
-        }"
-      >
-        {{ file.status }}
-      </q-item-label>
-    </q-item-section>
-    <q-separator spaced inset />
+      <q-item-section side top>
+        <!-- UNSURE OF ALL POSSIBLE STATUS CODES; failed, review etc? -->
+        <q-item-label
+          caption
+          :class="{
+            'bg-positive': file.status === 'EXPORTED',
+            'bg-negative': file.status === 'ERROR' || file.status === 'INVALID',
+            'bg-warning': file.status === 'REJECTED',
+            'bg-info': file.status === 'PROCESSED',
+          }"
+        >
+          {{ file.status }}
+        </q-item-label>
+      </q-item-section>
+      <q-separator spaced inset />
+    </div>
   </q-item>
 </template>
 
