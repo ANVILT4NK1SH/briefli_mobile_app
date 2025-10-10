@@ -1,5 +1,5 @@
 <template>
-  <q-toolbar class="q-pa-sm flex items-center items-stretch bg-primary">
+  <q-toolbar class="q-pa-sm items-stretch bg-primary justify-center">
     <!-- would it be better to make this toolbar its own component-->
     <q-btn
       style="background-color: white"
@@ -25,40 +25,34 @@
     </q-btn>
   </q-toolbar>
 
-  <q-item v-for="file in filteredFiles" :key="file.fileName">
-    <div
-      class="flex row items-center"
-      style="width: 100%"
-      @click="showDocument(file.fileName, file.rotations)"
-    >
-      <q-item-section side left>
-        <q-avatar icon="description" />
-        <q-item-label>
-          {{ file.documentTypes[0] }}
-        </q-item-label>
-      </q-item-section>
+  <q-item v-for="file in filteredFiles" :key="file.fileName" class="justify-center">
+    <q-item-section side left>
+      <q-avatar icon="description" />
+      <q-item-label>
+        {{ file.documentTypes[0] }}
+      </q-item-label>
+    </q-item-section>
 
-      <q-item-section>
-        <q-item-label>{{ file.displayName }}</q-item-label>
-        <q-item-label caption>{{ getClientName(file.clientId) }}</q-item-label>
-      </q-item-section>
+    <q-item-section class="items-center">
+      <q-item-label class="text-center">{{ file.displayName }}</q-item-label>
+      <q-item-label caption class="text-center">{{ getClientName(file.clientId) }}</q-item-label>
+    </q-item-section>
 
-      <q-item-section side top>
-        <!-- UNSURE OF ALL POSSIBLE STATUS CODES; failed, review etc? -->
-        <q-item-label
-          caption
-          :class="{
-            'bg-positive': file.status === 'EXPORTED',
-            'bg-negative': file.status === 'ERROR',
-            'bg-warning': file.status === 'PROCESSED',
-            'bg-info': file.status === 'INVALID',
-          }"
-        >
-          {{ file.status }}
-        </q-item-label>
-      </q-item-section>
-      <q-separator spaced inset />
-    </div>
+    <q-item-section side top>
+      <!-- UNSURE OF ALL POSSIBLE STATUS CODES; failed, review etc? -->
+      <q-item-label
+        caption
+        :class="{
+          'bg-positive': file.status === 'EXPORTED',
+          'bg-negative': file.status === 'ERROR' || file.status === 'INVALID',
+          'bg-warning': file.status === 'REJECTED',
+          'bg-info': file.status === 'PROCESSED',
+        }"
+      >
+        {{ file.status }}
+      </q-item-label>
+    </q-item-section>
+    <q-separator spaced inset />
   </q-item>
 </template>
 
