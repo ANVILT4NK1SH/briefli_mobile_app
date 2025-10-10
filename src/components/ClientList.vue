@@ -1,7 +1,13 @@
 <template>
   <q-card v-for="client in clients" :key="client.clientId" elevated class="q-mb-md">
     <q-item>
-      <q-avatar top left><img src="client.imgUrl" alt="Client Icon" /></q-avatar>
+      <q-avatar top left v-if="client.imgUrl">
+        <q-img :src="client.imgUrl" alt="Client Icon" />
+      </q-avatar>
+
+      <q-avatar top left v-else color="primary" text-color="white">
+        {{ client.name.slice(0, 1) }}
+      </q-avatar>
 
       <q-item-section top left>
         <q-item-label class="text-h6">{{ client.name }}</q-item-label>
