@@ -1,4 +1,13 @@
 <template>
+  <div
+    v-if="isLoading"
+    class="q-pa-xl text-primary flex flex-center column z-top bg-accent text-h3 text-center"
+    style="position: fixed; top: 0; left: 0; height: 100vh; width: 100vw; margin: 0"
+  >
+    Please wait for file to open!
+    <q-img src="img\logos\briefli-reveal-light.gif" />
+    <!-- <q-circular-progress indeterminate rounded size="50px" color="primary" class="q-ma-md z-top" /> -->
+  </div>
   <!-- PDF Modal -->
   <q-dialog v-model="showPdfModal" full-width maximized>
     <PdfViewer
@@ -16,7 +25,12 @@
       <div
         class="flex row items-center justfy-center"
         style="width: 100%"
-        @click="showDocument(file.fileName, file.rotations)"
+        @click="
+          // if (file.status != 'ERROR' && file.status != 'INVALID') {
+          //   showDocument(file.fileName, file.rotations);
+          // }
+          showDocument(file.fileName, file.rotations)
+        "
       >
         <q-item-section side left>
           <q-avatar icon="description" />
@@ -37,10 +51,10 @@
           <q-item-label
             caption
             :class="{
-              'bg-positive': file.status === 'EXPORTED',
-              'bg-negative': file.status === 'ERROR' || file.status === 'INVALID',
-              'bg-warning': file.status === 'REJECTED',
-              'bg-info': file.status === 'PROCESSED',
+              'text-positive': file.status === 'EXPORTED',
+              'text-negative': file.status === 'ERROR' || file.status === 'INVALID',
+              'text-warning': file.status === 'REJECTED',
+              'text-info': file.status === 'PROCESSED',
             }"
           >
             {{ file.status }}
@@ -55,27 +69,32 @@
         <q-btn
           style="background-color: white"
           padding="xs lg"
-          @click="filterByStatus = statusReviewNeeded"
+          @click="((filterByStatus = statusReviewNeeded), (clientUnassigned = false))"
         >
           Review Needed
         </q-btn>
+        <q-btn style="background-color: white" padding="xs lg" @click="clientUnassigned = true"
+          >Unassigned</q-btn
+        >
         <q-btn
           style="background-color: white"
           padding="xs lg"
-          @click="filterByStatus = statusUnassigned"
-          >Unassigned</q-btn
+          @click="((filterByStatus = statusOk), (clientUnassigned = false))"
         >
-        <q-btn style="background-color: white" padding="xs lg" @click="filterByStatus = statusOk">
           Exported
         </q-btn>
         <q-btn
           style="background-color: white"
           padding="xs lg"
-          @click="filterByStatus = statusError"
+          @click="((filterByStatus = statusError), (clientUnassigned = false))"
         >
           Failed
         </q-btn>
-        <q-btn style="background-color: white" padding="xs lg" @click="filterByStatus = statusAll">
+        <q-btn
+          style="background-color: white"
+          padding="xs lg"
+          @click="((filterByStatus = statusAll), (clientUnassigned = false))"
+        >
           All
         </q-btn>
       </q-toolbar>
@@ -94,7 +113,7 @@ import {
   statusAll,
   statusError,
   statusOk,
-  statusUnassigned,
+  clientUnassigned,
   statusReviewNeeded,
 } from 'src/services/fileService';
 import { apiService } from 'src/services/apiService';
@@ -102,6 +121,8 @@ import type { Client } from './models';
 import { getClients } from 'src/services/clientService';
 import PdfViewer from './PdfViewer.vue';
 import { onUnmounted } from 'vue';
+import { useQuasar } from 'quasar';
+import type { QNotifyOptions } from 'quasar';
 
 const auth0 = useAuth0();
 const clients = ref<Client[]>([]);
@@ -109,6 +130,7 @@ const pdfUrl = ref<string>('');
 const showPdfModal = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 const currentFileName = ref<string>('');
+const $q = useQuasar();
 
 onMounted(async () => {
   if (auth0.isLoading.value) {
@@ -159,14 +181,17 @@ const showDocument = async (filename: string, rotations: number[]) => {
 
     pdfUrl.value = await apiService.getDocument(filename, rotations);
     console.log('PDF loaded:', filename);
-
+    isLoading.value = false;
     // Show modal after PDF URL is set
     showPdfModal.value = true;
   } catch (error) {
+    isLoading.value = false;
+    $q.notify({
+      message: 'Error loading document',
+      color: 'negative',
+    } as QNotifyOptions);
     console.error('Error loading document:', error);
     // You might want to show a notification here
-  } finally {
-    isLoading.value = false;
   }
 };
 
