@@ -21,53 +21,55 @@
 
   <q-page-container class="bg-custombg row justify-center" style="padding-top: 3.5rem">
     <!-- File List -->
-    <q-card
-      v-for="file in filteredFiles"
-      :key="file.fileName"
-      class="q-pa-xs q-ma-sm justify-center"
-      style="width: 360px"
-      elevated
-    >
-      <div
-        class="flex row items-center justfy-center"
-        style="width: 100%"
-        @click="
-          // if (file.status != 'ERROR' && file.status != 'INVALID') {
-          //   showDocument(file.fileName, file.rotations);
-          // }
-          showDocument(file.fileName, file.rotations)
-        "
+    <q-pull-to-refresh @refresh="refresh" color="secondary">
+      <q-card
+        v-for="file in filteredFiles"
+        :key="file.fileName"
+        class="q-pa-xs q-ma-sm justify-center"
+        style="width: 360px"
+        elevated
       >
-        <q-item-section side left>
-          <q-avatar icon="description" />
-          <q-item-label>
-            {{ !file.documentTypes[0] ? 'Unknown' : file.documentTypes[0] }}
-          </q-item-label>
-        </q-item-section>
+        <div
+          class="flex row items-center justfy-center"
+          style="width: 100%"
+          @click="
+            // if (file.status != 'ERROR' && file.status != 'INVALID') {
+            //   showDocument(file.fileName, file.rotations);
+            // }
+            showDocument(file.fileName, file.rotations)
+          "
+        >
+          <q-item-section side left>
+            <q-avatar icon="description" />
+            <q-item-label>
+              {{ !file.documentTypes[0] ? 'Unknown' : file.documentTypes[0] }}
+            </q-item-label>
+          </q-item-section>
 
-        <q-item-section class="items-center">
-          <q-item-label class="text-center">{{ file.displayName }}</q-item-label>
-          <q-item-label caption class="text-center">{{
-            getClientName(file.clientId)
-          }}</q-item-label>
-        </q-item-section>
+          <q-item-section class="items-center">
+            <q-item-label class="text-center">{{ file.displayName }}</q-item-label>
+            <q-item-label caption class="text-center">{{
+              getClientName(file.clientId)
+            }}</q-item-label>
+          </q-item-section>
 
-        <q-item-section side top>
-          <!-- UNSURE OF ALL POSSIBLE STATUS CODES; failed, review etc? -->
-          <q-item-label
-            caption
-            :class="{
-              'text-positive': file.status === 'EXPORTED',
-              'text-negative': file.status === 'ERROR' || file.status === 'INVALID',
-              'text-warning': file.status === 'REJECTED',
-              'text-info': file.status === 'PROCESSED',
-            }"
-          >
-            {{ file.status }}
-          </q-item-label>
-        </q-item-section>
-      </div>
-    </q-card>
+          <q-item-section side top>
+            <!-- UNSURE OF ALL POSSIBLE STATUS CODES; failed, review etc? -->
+            <q-item-label
+              caption
+              :class="{
+                'text-positive': file.status === 'EXPORTED',
+                'text-negative': file.status === 'ERROR' || file.status === 'INVALID',
+                'text-warning': file.status === 'REJECTED',
+                'text-info': file.status === 'PROCESSED',
+              }"
+            >
+              {{ file.status }}
+            </q-item-label>
+          </q-item-section>
+        </div>
+      </q-card>
+    </q-pull-to-refresh>
 
     <q-page-sticky expand position="top">
       <q-toolbar class="items-stretch bg-custombg justify-center z-top q-pa-none q-pt-xs">
@@ -162,6 +164,34 @@ onMounted(async () => {
   }
 
   try {
+    await getPageData();
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+});
+
+const refresh = async (done: (cancel?: boolean) => void) => {
+  try {
+    await getPageData();
+    $q.notify({
+      message: 'Data refreshed successfully',
+      color: 'positive',
+      position: 'top',
+    });
+    done(); // Signal successful refresh
+  } catch (error) {
+    $q.notify({
+      message: 'Failed to refresh data',
+      color: 'negative',
+      position: 'top',
+    });
+    done(); // Signal completion even on error
+    console.log('Error refreshing:', error);
+  }
+};
+
+const getPageData = async () => {
+  try {
     const response = await apiService.getFiles();
     files.value = response.data;
     clients.value = await getClients();
@@ -169,7 +199,7 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error fetching data:', error);
   }
-});
+};
 
 const getClientName = (clientId: string) => {
   const client = clients.value.find((client) => client.clientId === clientId);
