@@ -19,12 +19,13 @@
     />
   </q-dialog>
 
-  <q-page-container class="bg-custombg" style="padding-top: 3.5rem">
+  <q-page-container class="bg-custombg row justify-center" style="padding-top: 3.5rem">
     <!-- File List -->
     <q-card
       v-for="file in filteredFiles"
       :key="file.fileName"
       class="q-pa-xs q-ma-sm justify-center"
+      style="width: 360px"
       elevated
     >
       <div
