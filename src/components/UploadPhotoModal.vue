@@ -80,7 +80,6 @@ const capturePhoto = async () => {
     });
 
     if (image.webPath) {
-      //Error if filename ends in .jpg
       filename.value = `${Date.now()}.${image.format}`;
       imageUrl.value = image.webPath; // For preview
       // Convert URI to File (if needed)
