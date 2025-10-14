@@ -19,56 +19,61 @@
     />
   </q-dialog>
 
-  <q-page-container class="bg-custombg row justify-center" style="padding-top: 3.5rem">
+  <q-page-container class="bg-custombg" style="padding-top: 3.5rem">
     <!-- File List -->
     <q-pull-to-refresh @refresh="refresh" color="secondary">
-      <q-card
-        v-for="file in filteredFiles"
-        :key="file.fileName"
-        class="q-pa-xs q-ma-sm justify-center"
-        style="width: 360px"
-        elevated
-      >
-        <div
-          class="flex row items-center justfy-center"
-          style="width: 100%"
-          @click="
-            // if (file.status != 'ERROR' && file.status != 'INVALID') {
-            //   showDocument(file.fileName, file.rotations);
-            // }
-            showDocument(file.fileName, file.rotations)
-          "
-        >
-          <q-item-section side left>
-            <q-avatar icon="description" />
-            <q-item-label>
-              {{ !file.documentTypes[0] ? 'Unknown' : file.documentTypes[0] }}
-            </q-item-label>
-          </q-item-section>
-
-          <q-item-section class="items-center">
-            <q-item-label class="text-center">{{ file.displayName }}</q-item-label>
-            <q-item-label caption class="text-center">{{
-              getClientName(file.clientId)
-            }}</q-item-label>
-          </q-item-section>
-
-          <q-item-section side top>
-            <!-- UNSURE OF ALL POSSIBLE STATUS CODES; failed, review etc? -->
-            <q-item-label
-              caption
-              :class="{
-                'text-positive': file.status === 'EXPORTED',
-                'text-negative': file.status === 'ERROR' || file.status === 'INVALID',
-                'text-warning': file.status === 'REJECTED',
-                'text-info': file.status === 'PROCESSED',
-              }"
+      <div class="q-pa-xs">
+        <div class="row q-col-gutter-sm justify-center">
+          <q-card
+            v-for="file in filteredFiles"
+            :key="file.fileName"
+            class="q-pa-xs q-ma-sm justify-center"
+            style="width: 21rem"
+            elevated
+          >
+            <div
+              class="flex row items-center justfy-center"
+              style="width: 100%"
+              @click="
+                // if (file.status != 'ERROR' && file.status != 'INVALID') {
+                //   showDocument(file.fileName, file.rotations);
+                // }
+                showDocument(file.fileName, file.rotations)
+              "
             >
-              {{ file.status }}
-            </q-item-label>
-          </q-item-section>
+              <q-item-section side left>
+                <q-avatar icon="description" />
+                <q-item-label>
+                  {{ !file.documentTypes[0] ? 'Unknown' : file.documentTypes[0] }}
+                </q-item-label>
+              </q-item-section>
+
+              <q-item-section class="items-center">
+                <q-item-label class="text-center">{{ file.displayName }}</q-item-label>
+                <q-item-label caption class="text-center">{{
+                  getClientName(file.clientId)
+                }}</q-item-label>
+              </q-item-section>
+
+              <q-item-section side top>
+                <!-- UNSURE OF ALL POSSIBLE STATUS CODES; failed, review etc? -->
+                <q-item-label
+                  caption
+                  :class="{
+                    'bg-positive': getFileCategoryStatus(file.status) === 'completed',
+                    'bg-negative': getFileCategoryStatus(file.status) === 'failed',
+                    'bg-warning': getFileCategoryStatus(file.status) === 'processing',
+                    'bg-info': getFileCategoryStatus(file.status) === 'loading',
+                  }"
+                  style="border-radius: 1rem; padding: 0.5rem; color: white"
+                >
+                  {{ getFileCategoryStatus(file.status) }}
+                </q-item-label>
+              </q-item-section>
+            </div>
+          </q-card>
         </div>
-      </q-card>
+      </div>
     </q-pull-to-refresh>
 
     <q-page-sticky expand position="top">
@@ -129,6 +134,7 @@ import {
   statusOk,
   clientUnassigned,
   statusReviewNeeded,
+  getFileCategoryStatus,
 } from 'src/services/fileService';
 import { apiService } from 'src/services/apiService';
 import type { Client } from './models';
