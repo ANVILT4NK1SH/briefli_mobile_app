@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="isUploading"
-    class="q-pa-xl text-primary flex flex-center column z-top bg-accent text-h3 text-center"
+    class="q-pa-xl text-accent flex flex-center column z-top bg-primary text-h3 text-center"
   >
     Please wait for file to upload!
     <q-img src="img\logos\briefli-reveal-light.gif" />
@@ -10,7 +10,7 @@
   <div v-else-if="isUploaded" class="q-pa-md column flex flex-center column">
     <q-btn
       label="Select another File"
-      color="primary"
+      color="secondary"
       @click="selectAnotherFile"
       style="padding: 1rem; margin: 1rem"
     />
@@ -47,7 +47,7 @@
       v-if="selectedFile"
       class="q-pa-lg q-ma-md"
       label="Upload"
-      color="primary"
+      color="secondary"
       @click="uploadSelectedFile"
     />
   </div>
@@ -129,6 +129,7 @@ const uploadSelectedFile = async () => {
     console.error('Upload error:', err);
     isUploading.value = false;
   }
+  console.log(await apiService.getFiles());
 };
 
 const closePreview = () => {

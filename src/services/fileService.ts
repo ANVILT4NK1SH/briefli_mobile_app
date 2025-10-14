@@ -2,7 +2,6 @@ import type { ImportedDocument } from 'src/components/models';
 import { computed, ref } from 'vue';
 
 export const files = ref<ImportedDocument[]>([]);
-export const filterByStatus = ref<string[]>();
 
 // utilize these refs to set statuses across application (place status string inside array, and import variable where needed)
 export const statusOk = ref<string[]>(['EXPORTED']);
@@ -10,6 +9,7 @@ export const statusError = ref<string[]>(['ERROR', 'INVALID']);
 export const statusReviewNeeded = ref<string[]>(['PROCESSED', 'INVALID', 'ERROR']);
 export const statusAll = ref<string[]>(['PROCESSED', 'INVALID', 'ERROR', 'EXPORTED', 'REJECTED']);
 export const clientUnassigned = ref(false);
+export const filterByStatus = ref<string[]>(statusAll.value);
 
 export const filteredFiles = computed(() => {
   if (!filterByStatus.value || filterByStatus.value.length === 0) {

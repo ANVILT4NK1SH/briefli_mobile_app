@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="isLoading"
-    class="q-pa-xl text-primary flex flex-center column z-top bg-accent text-h3 text-center"
+    class="q-pa-xl text-secondary flex flex-center column z-top bg-primary text-h3 text-center"
     style="position: fixed; top: 0; left: 0; height: 100vh; width: 100vw; margin: 0"
   >
     Please wait for file to open!
@@ -19,9 +19,14 @@
     />
   </q-dialog>
 
-  <q-page-container style="padding-top: 3.5rem">
+  <q-page-container class="bg-custombg" style="padding-top: 3.5rem">
     <!-- File List -->
-    <q-item v-for="file in filteredFiles" :key="file.fileName" class="justify-center">
+    <q-card
+      v-for="file in filteredFiles"
+      :key="file.fileName"
+      class="q-pa-xs q-ma-sm justify-center"
+      elevated
+    >
       <div
         class="flex row items-center justfy-center"
         style="width: 100%"
@@ -61,41 +66,47 @@
           </q-item-label>
         </q-item-section>
       </div>
-    </q-item>
+    </q-card>
 
     <q-page-sticky expand position="top">
-      <q-toolbar class="q-pa-sm items-stretch bg-primary justify-center z-top">
+      <q-toolbar class="items-stretch bg-custombg justify-center z-top q-pa-none q-pt-xs">
         <!-- would it be better to make this toolbar its own component-->
         <q-btn
-          style="background-color: white"
+          :class="filterByStatus === statusReviewNeeded ? 'selected q-ma-xs' : 'q-ma-xs bg-white'"
           padding="xs lg"
           @click="((filterByStatus = statusReviewNeeded), (clientUnassigned = false))"
         >
-          Review Needed
+          <p style="font-size: smaller; margin: 0">Review Needed</p>
         </q-btn>
-        <q-btn style="background-color: white" padding="xs lg" @click="clientUnassigned = true"
-          >Unassigned</q-btn
+        <q-btn
+          :class="
+            clientUnassigned === true
+              ? 'q-ma-xs justify-center items-center selected'
+              : 'q-ma-xs bg-primary justify-center items-center'
+          "
+          @click="((clientUnassigned = true), (filterByStatus = ['']))"
+          ><p style="font-size: smaller; margin: 0">Unassigned</p></q-btn
         >
         <q-btn
-          style="background-color: white"
+          :class="filterByStatus === statusOk ? 'selected q-ma-xs' : 'q-ma-xs bg-white'"
           padding="xs lg"
           @click="((filterByStatus = statusOk), (clientUnassigned = false))"
         >
-          Exported
+          <p style="font-size: smaller; margin: 0">Exported</p>
         </q-btn>
         <q-btn
-          style="background-color: white"
+          :class="filterByStatus === statusError ? 'selected q-ma-xs' : 'q-ma-xs bg-white'"
           padding="xs lg"
           @click="((filterByStatus = statusError), (clientUnassigned = false))"
         >
-          Failed
+          <p style="font-size: smaller; margin: 0">Failed</p>
         </q-btn>
         <q-btn
-          style="background-color: white"
+          :class="filterByStatus === statusAll ? 'selected q-ma-xs' : 'q-ma-xs bg-white'"
           padding="xs lg"
           @click="((filterByStatus = statusAll), (clientUnassigned = false))"
         >
-          All
+          <p style="font-size: smaller; margin: 0">All</p>
         </q-btn>
       </q-toolbar>
     </q-page-sticky>

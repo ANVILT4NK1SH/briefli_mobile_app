@@ -1,11 +1,11 @@
 <template>
   <q-card v-for="client in clients" :key="client.clientId" elevated class="q-mb-md">
     <q-item>
-      <q-avatar top left v-if="client.imgUrl">
+      <q-avatar top left v-if="client.imgUrl" class="q-mr-md">
         <q-img :src="client.imgUrl" alt="Client Icon" />
       </q-avatar>
 
-      <q-avatar top left v-else color="primary" text-color="white">
+      <q-avatar top left class="q-mr-md" v-else color="secondary" text-color="white">
         {{ client.name.slice(0, 1) }}
       </q-avatar>
 
