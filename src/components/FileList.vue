@@ -210,7 +210,7 @@ const getPageData = async () => {
     const response = await apiService.getFiles();
     files.value = response.data;
     clients.value = await getClients();
-    console.log('Files fetched:');
+    console.log('Files fetched:', files);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
