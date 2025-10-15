@@ -72,6 +72,10 @@
                 </q-item-label>
               </q-item-section>
             </div>
+            <!-- Section below with upload time (outside of row div)-->
+            <q-item-section class="items-center">
+              <q-item-label caption>UPLOAD TIME</q-item-label>
+            </q-item-section>
           </q-card>
         </div>
       </div>
