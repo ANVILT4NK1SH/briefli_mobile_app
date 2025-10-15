@@ -51,7 +51,7 @@
               </q-item-section>
 
               <!-- Center section with file name and client name -->
-              <q-item-section class="items-center">
+              <q-item-section>
                 <q-item-label>{{ file.displayName }}</q-item-label>
                 <q-item-label caption>{{ getClientName(file.clientId) }}</q-item-label>
               </q-item-section>
