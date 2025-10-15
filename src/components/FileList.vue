@@ -35,7 +35,7 @@
           >
             <!-- Clickable area to open document preview -->
             <div
-              class="flex row items-center justfy-center"
+              class="flex row items-center justify-center"
               style="width: 100%"
               @click="showDocument(file.fileName, file.rotations)"
             >
