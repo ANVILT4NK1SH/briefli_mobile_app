@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="isUploading"
-    class="q-pa-xl text-primary flex flex-center column z-top bg-accent text-h3 text-center"
+    class="q-pa-xl text-secondary flex flex-center column z-top bg-primary text-h3 text-center"
   >
     Please wait for Photo to upload!
     <q-img src="img\logos\briefli-reveal-light.gif" />
@@ -10,7 +10,7 @@
   <div v-else-if="isUploaded" class="q-pa-md bg-tranparentBlack flex flex-center column">
     <q-btn
       label="Take another Photo"
-      color="primary"
+      color="secondary"
       @click="takeNewPhoto"
       style="padding: 1rem; margin: 1rem"
     />
@@ -30,7 +30,7 @@
     />
     <q-btn
       label="Capture Photo"
-      color="primary"
+      color="secondary"
       @click="capturePhoto"
       style="padding: 1rem; margin: 1rem"
     />
@@ -42,7 +42,7 @@
     >
       <img :src="imageUrl" alt="Captured Image" style="max-width: 300px" />
       <p style="color: white">FILENAME: {{ filename }}</p>
-      <q-btn label="Upload" color="primary" @click="uploadPhoto" />
+      <q-btn label="Upload" color="secondary" @click="uploadPhoto" />
     </div>
   </div>
 </template>
@@ -80,7 +80,6 @@ const capturePhoto = async () => {
     });
 
     if (image.webPath) {
-      //Error if filename ends in .jpg
       filename.value = `${Date.now()}.${image.format}`;
       imageUrl.value = image.webPath; // For preview
       // Convert URI to File (if needed)
@@ -141,6 +140,7 @@ const uploadPhoto = async () => {
     console.error('Upload error:', err);
     isUploading.value = false;
   }
+  console.log(await apiService.getFiles());
 };
 
 const takeNewPhoto = () => {

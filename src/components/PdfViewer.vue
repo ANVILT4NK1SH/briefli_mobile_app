@@ -1,8 +1,8 @@
 <template>
-  <div class="pdf-viewer">
+  <div class="pdf-viewer full-width">
     <!-- Viewer Header with Controls -->
     <div class="viewer-header" v-if="showHeader">
-      <div class="header-left">
+      <div class="header-left flex row no-wrap full-width">
         <q-btn
           v-if="showCloseButton"
           icon="close"
@@ -11,10 +11,12 @@
           @click="$emit('close')"
           class="close-btn"
         />
-        <span class="file-name" v-if="fileName">{{ fileName }}</span>
+        <p class="file-name" v-if="fileName">
+          {{ fileName }}
+        </p>
       </div>
 
-      <div class="header-actions">
+      <!-- <div class="header-actions">
         <q-btn
           icon="download"
           label="Download"
@@ -22,7 +24,7 @@
           :disabled="!pdfUrl"
           class="download-btn"
         />
-      </div>
+      </div> -->
     </div>
 
     <!-- PDF Content -->
@@ -151,29 +153,28 @@ onUnmounted(() => {
 
 .viewer-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
+  justify-content: left;
+  align-items: flex-start;
   background-color: #f5f5f5;
-  border-bottom: 1px solid #e0e0e0;
 }
 
 .header-left {
   display: flex;
-  align-items: center;
-  flex: 1;
+  align-items: left;
+  align-content: center;
+  justify-content: left;
+  padding-right: 2px;
+  margin-right: 2px;
 }
 
 .close-btn {
-  margin-right: 12px;
+  width: 1rem;
 }
 
 .file-name {
   font-weight: 500;
-  font-size: 16px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 12px;
+  overflow-wrap: break-word;
 }
 
 .header-actions {

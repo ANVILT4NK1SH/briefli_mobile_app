@@ -1,16 +1,15 @@
 <template>
   <div
     v-if="isUploading"
-    class="q-pa-xl text-primary flex flex-center column z-top bg-accent text-h3 text-center"
+    class="q-pa-xl text-accent flex flex-center column z-top bg-primary text-h3 text-center"
   >
     Please wait for file to upload!
     <q-img src="img\logos\briefli-reveal-light.gif" />
-    <!-- <q-circular-progress indeterminate rounded size="50px" color="primary" class="q-ma-md z-top" /> -->
   </div>
   <div v-else-if="isUploaded" class="q-pa-md column flex flex-center column">
     <q-btn
       label="Select another File"
-      color="primary"
+      color="secondary"
       @click="selectAnotherFile"
       style="padding: 1rem; margin: 1rem"
     />
@@ -43,18 +42,21 @@
         @close="closePreview"
       />
     </div>
+    <div v-else-if="isImage && previewUrl">
+      <img :src="previewUrl" alt="Captured Image" style="max-width: 300px" />
+    </div>
     <q-btn
       v-if="selectedFile"
       class="q-pa-lg q-ma-md"
       label="Upload"
-      color="primary"
+      color="secondary"
       @click="uploadSelectedFile"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { QFile, useQuasar } from 'quasar';
 import { apiService } from 'src/services/apiService';
 import { getClients } from 'src/services/clientService';
@@ -72,24 +74,53 @@ const filename = ref('');
 const isUploaded = ref(false);
 const isUploading = ref(false);
 const pdfUrl = ref<string>('');
+const previewUrl = ref<string>('');
 const isLoading = ref<boolean>(false);
 const currentFileName = ref<string>('');
 const showPdfModal = ref<boolean>(false);
+const isImage = ref<boolean>(false);
 
 onMounted(async () => {
   clients.value = await getClients();
   clientNames.value = clients.value.map((client) => client.name);
 });
 
+// Watch for changes to selectedFile to clean up previous URLs
+watch(selectedFile, (newFile, oldFile) => {
+  // Clean up previous URL to prevent memory leaks
+  if (oldFile && previewUrl.value) {
+    window.URL.revokeObjectURL(previewUrl.value);
+    previewUrl.value = '';
+  }
+  if (oldFile && pdfUrl.value) {
+    window.URL.revokeObjectURL(pdfUrl.value);
+    pdfUrl.value = '';
+  }
+});
+
 const onFileSelected = () => {
-  //check type of file
-  showPdfModal.value = true;
   file.value = selectedFile.value;
   if (file.value) {
     filename.value = file.value.name;
-    const blob = new Blob([file.value], { type: 'application/pdf' });
-    pdfUrl.value = window.URL.createObjectURL(blob);
-    console.log('File selected:', filename);
+    isImage.value = file.value.type.startsWith('image/');
+
+    if (isImage.value) {
+      // Create a URL for image preview
+      previewUrl.value = window.URL.createObjectURL(file.value);
+    } else if (file.value.type === 'application/pdf') {
+      // Create a URL for PDF preview
+      const blob = new Blob([file.value], { type: file.value.type });
+      pdfUrl.value = window.URL.createObjectURL(blob);
+      showPdfModal.value = true;
+    }
+    console.log('File selected:', filename.value, 'Type:', file.value.type);
+  } else {
+    // Reset when no file is selected
+    isImage.value = false;
+    showPdfModal.value = false;
+    previewUrl.value = '';
+    pdfUrl.value = '';
+    filename.value = '';
   }
 };
 
@@ -129,13 +160,14 @@ const uploadSelectedFile = async () => {
     console.error('Upload error:', err);
     isUploading.value = false;
   }
+  console.log(await apiService.getFiles());
 };
 
 const closePreview = () => {
   showPdfModal.value = false;
   currentFileName.value = '';
 
-  // Clean up URL when preview is closed
+  // Clean up PDF URL when preview is closed
   if (pdfUrl.value) {
     window.URL.revokeObjectURL(pdfUrl.value);
     pdfUrl.value = '';
@@ -147,5 +179,12 @@ const selectAnotherFile = () => {
   file.value = null;
   filename.value = '';
   isUploaded.value = false;
+  isImage.value = false;
+  previewUrl.value = '';
+  showPdfModal.value = false;
+  if (pdfUrl.value) {
+    window.URL.revokeObjectURL(pdfUrl.value);
+    pdfUrl.value = '';
+  }
 };
 </script>

@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-toolbar-title>
           <img src="img\logos\briefli.svg" style="width: 150px; height: auto; padding-top: 0.5em" />
-          <p style="font-size: 10px">Mobile Companion</p>
+          <p class="text-secondary" style="font-size: 0.75rem">Mobile Companion</p>
         </q-toolbar-title>
         <router-link to="/userPage" class="q-pa-md q-gutter-sm row justify-end items-center">
           <q-avatar size="xl" color="secondary" text-color="white" icon="account_circle" />
