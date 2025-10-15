@@ -57,7 +57,7 @@
               </q-item-section>
 
               <!-- Right section with file status badge -->
-              <q-item-section side top class="q-mr-xs">
+              <q-item-section side top class="q-mr-md">
                 <q-item-label
                   caption
                   :class="{
