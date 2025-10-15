@@ -74,7 +74,9 @@
             </div>
             <!-- Section below with upload time (outside of row div)-->
             <q-item-section class="items-center">
-              <q-item-label caption>{{ file.createdAt }}</q-item-label>
+              <q-item-label caption
+                >Upload {{ timeElapsed(file.createdAt) }} hours ago</q-item-label
+              >
             </q-item-section>
           </q-card>
         </div>
@@ -277,6 +279,18 @@ const getColorByType = (fileType: string): string => {
     default:
       return 'grey';
   }
+};
+
+// Calculate time elapsed since upload
+const timeElapsed = (timeCreated: string): string => {
+  const dateCreated = new Date(timeCreated); //parse string into date object
+  const currentTime = Date.now();
+
+  const elapsedTime = currentTime - dateCreated.getTime();
+
+  const hours = elapsedTime / 3600000; // convert milliseconds to hours (3.6e+6ms in 1 hour)
+
+  return hours.toFixed(); // prevent floating points
 };
 
 // Clean up resources when component is unmounted
