@@ -52,10 +52,8 @@
 
               <!-- Center section with file name and client name -->
               <q-item-section class="items-center">
-                <q-item-label class="text-center">{{ file.displayName }}</q-item-label>
-                <q-item-label caption class="text-center">{{
-                  getClientName(file.clientId)
-                }}</q-item-label>
+                <q-item-label>{{ file.displayName }}</q-item-label>
+                <q-item-label caption>{{ getClientName(file.clientId) }}</q-item-label>
               </q-item-section>
 
               <!-- Right section with file status badge -->
