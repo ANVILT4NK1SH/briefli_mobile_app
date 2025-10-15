@@ -74,9 +74,7 @@
             </div>
             <!-- Section below with upload time (outside of row div)-->
             <q-item-section class="items-center">
-              <q-item-label caption
-                >Upload {{ timeElapsed(file.createdAt) }} hours ago</q-item-label
-              >
+              <q-item-label caption>{{ timeElapsed(file.createdAt) }} </q-item-label>
             </q-item-section>
           </q-card>
         </div>
@@ -290,7 +288,12 @@ const timeElapsed = (timeCreated: string): string => {
 
   const hours = elapsedTime / 3600000; // convert milliseconds to hours (3.6e+6ms in 1 hour)
 
-  return hours.toFixed(); // prevent floating points
+  // send hour v hours conditionally. Using toFixed to avoid floating points
+  if (hours.toFixed() === '1') {
+    return `Uploaded ${hours.toFixed()} hour ago`;
+  } else {
+    return `Uploaded ${hours.toFixed()} hours ago`;
+  }
 };
 
 // Clean up resources when component is unmounted
