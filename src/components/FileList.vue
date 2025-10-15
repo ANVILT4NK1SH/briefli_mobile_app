@@ -48,6 +48,9 @@
                 <q-item-label>
                   {{ !file.documentTypes[0] ? 'Unknown' : file.documentTypes[0] }}
                 </q-item-label>
+                <q-item-label class="q-pl-xs" style="max-width: 84px">
+                  {{ docTypeAbbreviation(file.documentTypes[0]!) }}
+                </q-item-label>
               </q-item-section>
 
               <!-- Center section with file name and client name -->
@@ -293,6 +296,22 @@ const timeElapsed = (timeCreated: string): string => {
     return `Uploaded ${hours.toFixed()} hour ago`;
   } else {
     return `Uploaded ${hours.toFixed()} hours ago`;
+  }
+};
+
+// Abbreviate file.documentType for display
+const docTypeAbbreviation = (docType: string): string => {
+  switch (docType) {
+    case 'Packing List':
+      return 'PL';
+    case 'Bill of Lading':
+      return 'BOL';
+    case 'Commercial Invoice':
+      return 'INV';
+    case 'Uknown':
+      return 'UNK';
+    default:
+      return 'UNK';
   }
 };
 
