@@ -46,9 +46,6 @@
                   :text-color="getColorByType(file.documentTypes[0] ?? 'Unknown')"
                 />
                 <q-item-label>
-                  {{ !file.documentTypes[0] ? 'Unknown' : file.documentTypes[0] }}
-                </q-item-label>
-                <q-item-label class="q-pl-xs" style="max-width: 84px">
                   {{ docTypeAbbreviation(file.documentTypes[0]!) }}
                 </q-item-label>
               </q-item-section>
