@@ -40,7 +40,7 @@
               @click="showDocument(file.fileName, file.rotations)"
             >
               <!-- Left section with file icon and document type -->
-              <q-item-section side left>
+              <q-item-section style="max-width: 60px" class="items-center">
                 <q-avatar
                   icon="description"
                   :text-color="getColorByType(file.documentTypes[0] ?? 'Unknown')"
