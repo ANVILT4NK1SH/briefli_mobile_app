@@ -73,7 +73,7 @@
               </q-item-section>
             </div>
             <!-- Section below with upload time (outside of row div)-->
-            <q-item-section class="items-center">
+            <q-item-section side left class="q-pt-sm q-pl-md">
               <q-item-label caption>{{ timeElapsed(file.createdAt) }} </q-item-label>
             </q-item-section>
           </q-card>
