@@ -41,7 +41,10 @@
             >
               <!-- Left section with file icon and document type -->
               <q-item-section side left>
-                <q-avatar icon="description" />
+                <q-avatar
+                  icon="description"
+                  :text-color="getColorByType(file.documentTypes[0] ?? 'Unknown')"
+                />
                 <q-item-label>
                   {{ !file.documentTypes[0] ? 'Unknown' : file.documentTypes[0] }}
                 </q-item-label>
@@ -255,6 +258,22 @@ const closePreview = () => {
   if (pdfUrl.value) {
     window.URL.revokeObjectURL(pdfUrl.value);
     pdfUrl.value = '';
+  }
+};
+
+// Update the icon color using file type
+const getColorByType = (fileType: string): string => {
+  switch (fileType) {
+    case 'Packing List':
+      return 'blue';
+    case 'Bill of Lading':
+      return 'green';
+    case 'Commercial Invoice':
+      return 'red';
+    case 'Uknown':
+      return 'grey';
+    default:
+      return 'grey';
   }
 };
 
