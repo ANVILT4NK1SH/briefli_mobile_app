@@ -35,28 +35,29 @@
           >
             <!-- Clickable area to open document preview -->
             <div
-              class="flex row items-center justfy-center"
+              class="flex row items-center justify-center"
               style="width: 100%"
               @click="showDocument(file.fileName, file.rotations)"
             >
               <!-- Left section with file icon and document type -->
-              <q-item-section side left>
-                <q-avatar icon="description" />
+              <q-item-section style="max-width: 60px" class="items-center">
+                <q-avatar
+                  icon="description"
+                  :text-color="getColorByType(file.documentTypes[0] ?? 'Unknown')"
+                />
                 <q-item-label>
-                  {{ !file.documentTypes[0] ? 'Unknown' : file.documentTypes[0] }}
+                  {{ docTypeAbbreviation(file.documentTypes[0]!) }}
                 </q-item-label>
               </q-item-section>
 
               <!-- Center section with file name and client name -->
-              <q-item-section class="items-center">
-                <q-item-label class="text-center">{{ file.displayName }}</q-item-label>
-                <q-item-label caption class="text-center">{{
-                  getClientName(file.clientId)
-                }}</q-item-label>
+              <q-item-section>
+                <q-item-label>{{ file.displayName }}</q-item-label>
+                <q-item-label caption>{{ getClientName(file.clientId) }}</q-item-label>
               </q-item-section>
 
               <!-- Right section with file status badge -->
-              <q-item-section side top>
+              <q-item-section side top class="q-mr-md">
                 <q-item-label
                   caption
                   :class="{
@@ -71,6 +72,10 @@
                 </q-item-label>
               </q-item-section>
             </div>
+            <!-- Timestamp outside 'row' div (below all in UI)-->
+            <q-item-section side left class="q-pt-sm q-pl-md">
+              <q-item-label caption>{{ timeElapsed(file.createdAt) }} </q-item-label>
+            </q-item-section>
           </q-card>
         </div>
       </div>
@@ -209,7 +214,7 @@ const getPageData = async () => {
     const response = await apiService.getFiles();
     files.value = response.data;
     clients.value = await getClients();
-    console.log('Files fetched:');
+    console.log('Files fetched:', files);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -255,6 +260,55 @@ const closePreview = () => {
   if (pdfUrl.value) {
     window.URL.revokeObjectURL(pdfUrl.value);
     pdfUrl.value = '';
+  }
+};
+
+// Update the icon color using file type
+const getColorByType = (fileType: string): string => {
+  switch (fileType) {
+    case 'Packing List':
+      return 'blue';
+    case 'Bill of Lading':
+      return 'green';
+    case 'Commercial Invoice':
+      return 'red';
+    case 'Uknown':
+      return 'grey';
+    default:
+      return 'grey';
+  }
+};
+
+// Calculate time elapsed since upload
+const timeElapsed = (timeCreated: string): string => {
+  const dateCreated = new Date(timeCreated); //parse string into date object
+  const currentTime = Date.now();
+
+  const elapsedTime = currentTime - dateCreated.getTime();
+
+  const hours = elapsedTime / 3600000; // convert milliseconds to hours (3.6e+6ms in 1 hour)
+
+  // send hour v hours conditionally. Using toFixed to avoid floating points
+  if (hours.toFixed() === '1') {
+    return `Uploaded ${hours.toFixed()} hour ago`;
+  } else {
+    return `Uploaded ${hours.toFixed()} hours ago`;
+  }
+};
+
+// Abbreviate file.documentType for display
+const docTypeAbbreviation = (docType: string): string => {
+  switch (docType) {
+    case 'Packing List':
+      return 'PL';
+    case 'Bill of Lading':
+      return 'BOL';
+    case 'Commercial Invoice':
+      return 'INV';
+    case 'Uknown':
+      return 'UNK';
+    default:
+      return 'UNK';
   }
 };
 
