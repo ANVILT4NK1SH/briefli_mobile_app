@@ -91,8 +91,7 @@ import { login } from 'src/services/authService';
 import { onMounted, ref, watch } from 'vue';
 import { filteredFiles, files, getFileCategoryStatus } from 'src/services/fileService';
 import { apiService } from 'src/services/apiService';
-import type { Client } from './models';
-import { getClients } from 'src/services/clientService';
+import { clients, getClientName, getClients } from 'src/services/clientService';
 import PdfViewer from './PdfViewer.vue';
 import { onUnmounted } from 'vue';
 import { useQuasar } from 'quasar';
@@ -100,7 +99,6 @@ import type { QNotifyOptions } from 'quasar';
 import StatusToolbar from './StatusToolbar.vue';
 
 const auth0 = useAuth0();
-const clients = ref<Client[]>([]);
 const pdfUrl = ref<string>('');
 const showPdfModal = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
@@ -166,12 +164,6 @@ const getPageData = async () => {
   } catch (error) {
     console.error('Error fetching data:', error);
   }
-};
-
-// Retrieve client name based on client ID
-const getClientName = (clientId: string) => {
-  const client = clients.value.find((client) => client.clientId === clientId);
-  return client ? client.name : '';
 };
 
 // Load and display a document in the PDF viewer
