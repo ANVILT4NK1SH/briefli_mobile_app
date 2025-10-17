@@ -17,6 +17,10 @@ export const getClients = async () => {
   return response.data.clients;
 };
 
+export const getAllClientNames = () => {
+  clientNames.value = clients.value.map((client: Client) => client.name);
+};
+
 // Retrieve client name based on client ID
 export const getClientName = (clientId: string) => {
   const client = clients.value.find((client) => client.clientId === clientId);
