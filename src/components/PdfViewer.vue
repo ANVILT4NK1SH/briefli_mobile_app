@@ -30,6 +30,7 @@
     <!-- PDF Content -->
     <div class="pdf-content" :class="{ 'with-header': showHeader }">
       <iframe
+        scrolling="no"
         v-if="pdfUrl"
         :src="pdfUrl"
         width="100%"
@@ -37,7 +38,7 @@
         :title="fileName || 'PDF Document'"
         class="pdf-iframe"
         ref="pdfIframe"
-      />
+      ></iframe>
 
       <!-- Loading State -->
       <div v-else-if="isLoading" class="loading-container">
@@ -198,6 +199,7 @@ onUnmounted(() => {
 }
 
 .pdf-iframe {
+  overflow: hidden !important;
   border: none;
   background-color: white;
 }
