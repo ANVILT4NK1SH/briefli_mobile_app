@@ -81,6 +81,7 @@
         </div>
       </div>
     </q-pull-to-refresh>
+    <StatusToolbar />
   </q-page-container>
 </template>
 
@@ -96,6 +97,7 @@ import PdfViewer from './PdfViewer.vue';
 import { onUnmounted } from 'vue';
 import { useQuasar } from 'quasar';
 import type { QNotifyOptions } from 'quasar';
+import StatusToolbar from './StatusToolbar.vue';
 
 const auth0 = useAuth0();
 const clients = ref<Client[]>([]);
