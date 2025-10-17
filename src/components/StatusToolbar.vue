@@ -51,20 +51,14 @@
         <p style="font-size: smaller; margin: 0" icon="magnify">Filter By Client</p>
       </q-btn>
     </q-toolbar>
-    <q-card v-if="toggleSelectClient" class="q-pa-md column flex flex-center column custom-rounded">
-      <q-select
-        v-model="selectedClient"
-        :options="clientNames"
-        label="Select Client"
-        clearable
-        use-input
-      />
-    </q-card>
+    <div v-if="toggleSelectClient" class="q-pa-md column flex flex-center column custom-rounded">
+      <CardFilterByClient />
+    </div>
   </q-page-sticky>
 </template>
 
 <script setup lang="ts">
-import { clientNames, getAllClientNames, selectedClient } from 'src/services/clientService';
+import { getAllClientNames } from 'src/services/clientService';
 import {
   filterByStatus,
   statusAll,
@@ -74,6 +68,7 @@ import {
   statusReviewNeeded,
 } from 'src/services/fileService';
 import { onMounted, ref } from 'vue';
+import CardFilterByClient from './CardFilterByClient.vue';
 
 const toggleSelectClient = ref(false);
 
