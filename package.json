@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Mobile companion app for Briefli PC Application.",
   "productName": "Briefli Mobile",
-  "author": "Shawn <iamshawnhartline@gmail.com> and Reece <rcdevs9@gmail.com>",
+  "author": "Shawn <iamshawnhartline@gmail.com> and Reece <rc.devs9@gmail.com>",
   "type": "module",
   "private": true,
   "scripts": {
