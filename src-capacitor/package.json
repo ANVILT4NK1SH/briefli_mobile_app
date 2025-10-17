@@ -2,11 +2,13 @@
   "name": "briefli-mobile-app",
   "version": "0.0.1",
   "description": "Mobile companion app for Briefli PC Application.",
-  "author": "Shawn <iamshawnhartline@gmail.com>",
+  "author": "Shawn <iamshawnhartline@gmail.com> and Reece",
   "private": true,
   "dependencies": {
+    "@capacitor/android": "^7.4.3",
     "@capacitor/app": "^7.0.0",
     "@capacitor/cli": "^7.0.0",
-    "@capacitor/core": "^7.0.0"
+    "@capacitor/core": "^7.0.0",
+    "@jcesarmobile/ssl-skip": "^0.4.0"
   }
 }

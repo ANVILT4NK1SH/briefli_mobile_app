@@ -15,11 +15,7 @@
       style="padding: 1rem; margin: 1rem"
     />
   </div>
-  <div
-    v-else
-    class="q-pa-md"
-    style="display: flex; flex-direction: column; align-items: center; justify-content: center"
-  >
+  <q-card v-else class="q-pa-md custom-rounded column justify center">
     <q-select
       v-model="selectedClient"
       :options="clientNames"
@@ -44,7 +40,7 @@
       <p style="color: white">FILENAME: {{ filename }}</p>
       <q-btn label="Upload" color="secondary" @click="uploadPhoto" />
     </div>
-  </div>
+  </q-card>
 </template>
 
 <script setup lang="ts">

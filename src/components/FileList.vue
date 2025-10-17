@@ -25,11 +25,12 @@
     <q-pull-to-refresh @refresh="refresh" color="secondary">
       <div class="q-pa-xs">
         <!-- Grid layout for displaying file cards -->
-        <div class="row q-col-gutter-sm justify-center">
+        <div class="row justify-center">
+          <!-- <pre>{{ files }}</pre> -->
           <q-card
             v-for="file in filteredFiles"
             :key="file.fileName"
-            class="q-pa-xs q-ma-sm justify-center"
+            class="q-pa-sm q-ma-xs justify-center"
             style="width: 21rem"
             elevated
           >
@@ -214,7 +215,7 @@ const getPageData = async () => {
     const response = await apiService.getFiles();
     files.value = response.data;
     clients.value = await getClients();
-    console.log('Files fetched:', files);
+    console.log('Files fetched:', files.value);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -281,19 +282,21 @@ const getColorByType = (fileType: string): string => {
 
 // Calculate time elapsed since upload
 const timeElapsed = (timeCreated: string): string => {
-  const dateCreated = new Date(timeCreated); //parse string into date object
-  const currentTime = Date.now();
+  const elapsedTime = (new Date().getTime() - new Date(timeCreated).getTime()) / (1000 * 60);
 
-  const elapsedTime = currentTime - dateCreated.getTime();
+  const result =
+    elapsedTime < 60
+      ? `uploaded ${elapsedTime.toFixed()} minutes ago`
+      : elapsedTime / 60 < 24
+        ? elapsedTime / 60 < 2 && elapsedTime / 60 > 0
+          ? `uploaded ${(elapsedTime / 60).toFixed()} hour ago`
+          : `uploaded ${(elapsedTime / 60).toFixed()} hours ago`
+        : elapsedTime / (60 * 24) < 2 && elapsedTime / (60 * 24) > 0
+          ? `uploaded ${(elapsedTime / (60 * 24)).toFixed()} day ago`
+          : `uploaded ${(elapsedTime / (60 * 24)).toFixed()} days ago`;
+  console.log('result:', result);
 
-  const hours = elapsedTime / 3600000; // convert milliseconds to hours (3.6e+6ms in 1 hour)
-
-  // send hour v hours conditionally. Using toFixed to avoid floating points
-  if (hours.toFixed() === '1') {
-    return `Uploaded ${hours.toFixed()} hour ago`;
-  } else {
-    return `Uploaded ${hours.toFixed()} hours ago`;
-  }
+  return result;
 };
 
 // Abbreviate file.documentType for display

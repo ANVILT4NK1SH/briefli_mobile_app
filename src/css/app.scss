@@ -8,6 +8,10 @@
   color: $secondary;
 }
 
+.custom-rounded {
+  border-radius: 15px !important;
+}
+
 @media (max-width: 768px) {
   .q-btn {
     font-size: 12px !important;

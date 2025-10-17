@@ -14,14 +14,13 @@
       style="padding: 1rem; margin: 1rem"
     />
   </div>
-  <div v-else class="q-pa-md column flex flex-center column">
+  <q-card v-else class="q-pa-md column flex flex-center column custom-rounded">
     <q-select
       v-model="selectedClient"
       :options="clientNames"
       label="Select Client"
       clearable
       use-input
-      style="padding: 0.5rem; background-color: white; border-radius: 3px"
     />
     <q-file
       class="q-pa-md q-ma-md bg-white text-subtitle1 text-primary"
@@ -52,7 +51,7 @@
       color="secondary"
       @click="uploadSelectedFile"
     />
-  </div>
+  </q-card>
 </template>
 
 <script setup lang="ts">
