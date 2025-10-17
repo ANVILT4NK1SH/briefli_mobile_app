@@ -5,6 +5,8 @@ import type { Client } from 'src/components/models';
 
 const bearerToken = ref('');
 export const clients = ref<Client[]>([]);
+export const selectedClient = ref(null);
+export const clientNames = ref<string[]>([]);
 
 export const getClients = async () => {
   bearerToken.value = await authService.getBearerToken();
