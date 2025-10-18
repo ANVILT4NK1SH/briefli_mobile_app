@@ -20,6 +20,12 @@ export const statusAll = ref<string[]>(
 export const clientUnassigned = ref(false);
 export const filterByStatus = ref<string[]>(statusAll.value);
 
+export const getAllFiles = async () => {
+  const response = await apiService.getFiles();
+  files.value = response.data;
+  return files.value;
+};
+
 export const filteredFiles = computed(() => {
   if (!filterByStatus.value || filterByStatus.value.length === 0) {
     //if no filter or if array is empty, show all files
