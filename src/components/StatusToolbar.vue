@@ -52,9 +52,13 @@
         <p style="font-size: smaller; margin: 0">Client</p>
       </q-btn>
     </q-toolbar>
-    <div v-if="toggleSelectClient" class="q-pa-md column flex flex-center column custom-rounded">
+    <q-dialog
+      v-if="toggleSelectClient"
+      v-model="toggleSelectClient"
+      class="q-pa-md column flex flex-center column custom-rounded"
+    >
       <CardFilterByClient @toggle="toggleSelectClientState" />
-    </div>
+    </q-dialog>
   </q-page-sticky>
 </template>
 
