@@ -9,7 +9,7 @@
       class="q-pa-md custom-rounded"
     />
     <q-btn
-      @click="filterFilesByClientId(selectedClient)"
+      @click="clickHandler(selectedClient!)"
       class="q-pa-lg q-ma-md center-items"
       color="secondary"
     >
@@ -21,4 +21,15 @@
 <script setup lang="ts">
 import { clientNames, selectedClient } from 'src/services/clientService';
 import { filterFilesByClientId } from 'src/services/fileService';
+
+const emit = defineEmits(['toggle']);
+
+function clickHandler(selectedClient: string) {
+  filterFilesByClientId(selectedClient);
+  toggleCard();
+}
+
+function toggleCard() {
+  emit('toggle');
+}
 </script>

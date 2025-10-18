@@ -52,7 +52,7 @@
       </q-btn>
     </q-toolbar>
     <div v-if="toggleSelectClient" class="q-pa-md column flex flex-center column custom-rounded">
-      <CardFilterByClient />
+      <CardFilterByClient @toggle="toggleSelectClientState" />
     </div>
   </q-page-sticky>
 </template>
@@ -75,4 +75,8 @@ const toggleSelectClient = ref(false);
 onMounted(() => {
   getAllClientNames();
 });
+
+function toggleSelectClientState() {
+  toggleSelectClient.value = !toggleSelectClient.value;
+}
 </script>
