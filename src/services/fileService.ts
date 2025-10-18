@@ -1,5 +1,6 @@
 import type { ImportedDocument } from 'src/components/models';
 import { computed, ref } from 'vue';
+import { getClientId } from './clientService';
 
 export const files = ref<ImportedDocument[]>([]);
 
@@ -50,4 +51,13 @@ export const getFileCategoryStatus = (status: string | undefined) => {
   } else {
     return 'loading';
   }
+};
+
+export const filterFilesByClientId = (clientName: string | null): ImportedDocument[] => {
+  const clientId = getClientId(clientName);
+
+  const foundFilesByClientId = files.value.filter((file) => file.clientId === clientId);
+
+  console.log(foundFilesByClientId);
+  return foundFilesByClientId;
 };
