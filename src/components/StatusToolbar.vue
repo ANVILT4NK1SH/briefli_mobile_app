@@ -52,6 +52,8 @@
         <p style="font-size: smaller; margin: 0">Client</p>
       </q-btn>
     </q-toolbar>
+
+    <!-- dialog for filtering by client -->
     <q-dialog
       v-if="toggleSelectClient"
       v-model="toggleSelectClient"
