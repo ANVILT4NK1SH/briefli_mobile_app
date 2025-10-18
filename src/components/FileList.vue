@@ -26,7 +26,6 @@
       <div class="q-pa-xs">
         <!-- Grid layout for displaying file cards -->
         <div class="row justify-center">
-          <!-- <pre>{{ files }}</pre> -->
           <q-card
             v-for="file in filteredFiles"
             :key="file.fileName"
