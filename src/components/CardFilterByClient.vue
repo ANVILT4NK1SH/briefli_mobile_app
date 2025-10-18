@@ -1,20 +1,14 @@
 <template>
-  <q-card>
+  <q-card class="q-pa-md column flex flex-center column custom-rounded">
     <q-select
       v-model="selectedClient"
       :options="clientNames"
       label="Select Client"
       clearable
       use-input
-      class="q-pa-md custom-rounded"
+      class="inherit"
     />
-    <q-btn
-      @click="clickHandler(selectedClient!)"
-      class="q-pa-lg q-ma-md center-items"
-      color="secondary"
-    >
-      Filter
-    </q-btn>
+    <q-btn @click="clickHandler(selectedClient!)" class="q-mt-md" color="secondary"> Filter </q-btn>
   </q-card>
 </template>
 
