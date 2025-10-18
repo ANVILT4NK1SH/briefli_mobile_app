@@ -48,7 +48,8 @@
         padding="xs lg"
         @click="toggleSelectClient = !toggleSelectClient"
       >
-        <p style="font-size: smaller; margin: 0" icon="magnify">Filter By Client</p>
+        <q-icon stack name="search" size="inherit"></q-icon>
+        <p style="font-size: smaller; margin: 0">Client</p>
       </q-btn>
     </q-toolbar>
     <div v-if="toggleSelectClient" class="q-pa-md column flex flex-center column custom-rounded">
