@@ -11,6 +11,7 @@
         <p style="font-size: smaller; margin: 0">Review Needed</p>
       </q-btn>
       <q-btn
+        v-if="$route.path === '/home'"
         :class="
           clientUnassigned === true
             ? 'q-ma-xs justify-center items-center selected'
