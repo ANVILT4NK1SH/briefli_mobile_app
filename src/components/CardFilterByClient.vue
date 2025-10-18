@@ -13,10 +13,15 @@
 </template>
 
 <script setup lang="ts">
-import { clientNames, selectedClient } from 'src/services/clientService';
+import { clientNames, getAllClientNames, selectedClient } from 'src/services/clientService';
 import { filterFilesByClientId } from 'src/services/fileService';
+import { onMounted } from 'vue';
 
 const emit = defineEmits(['toggle']);
+
+onMounted(() => {
+  clientNamesPlusUnassigned();
+});
 
 function clickHandler(selectedClient: string) {
   filterFilesByClientId(selectedClient)
@@ -30,5 +35,10 @@ function clickHandler(selectedClient: string) {
 
 function toggleCard() {
   emit('toggle');
+}
+
+function clientNamesPlusUnassigned() {
+  getAllClientNames(); //set all names
+  clientNames.value.push('Unassigned'); //push unassigned
 }
 </script>
