@@ -25,8 +25,13 @@ import { filterFilesByClientId } from 'src/services/fileService';
 const emit = defineEmits(['toggle']);
 
 function clickHandler(selectedClient: string) {
-  filterFilesByClientId(selectedClient);
-  toggleCard();
+  filterFilesByClientId(selectedClient)
+    .then(() => {
+      toggleCard();
+    })
+    .catch((error) => {
+      console.error('Error filtering files: ', error);
+    });
 }
 
 function toggleCard() {
