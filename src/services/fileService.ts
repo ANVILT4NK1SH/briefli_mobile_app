@@ -54,10 +54,9 @@ export const getFileCategoryStatus = (status: string | undefined) => {
 };
 
 export const filterFilesByClientId = (clientName: string | null): ImportedDocument[] => {
-  const clientId = getClientId(clientName);
+  const clientId = getClientId(clientName); //convert client name to id
 
-  const foundFilesByClientId = files.value.filter((file) => file.clientId === clientId);
-
-  console.log(foundFilesByClientId);
-  return foundFilesByClientId;
+  const filteredFilesByClientId = files.value.filter((file) => file.clientId === clientId); //filter files by id
+  files.value = filteredFilesByClientId; //set files to filtered array (ref updates ui)
+  return files.value;
 };
