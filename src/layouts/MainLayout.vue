@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
-      <q-toolbar>
+      <!--   <q-toolbar>
         <q-toolbar-title>
           <img src="img\logos\briefli.svg" style="width: 150px; height: auto; padding-top: 0.5em" />
           <p class="text-secondary" style="font-size: 0.75rem">Mobile Companion</p>
@@ -9,7 +9,7 @@
         <router-link to="/userPage" class="q-pa-md q-gutter-sm row justify-end items-center">
           <q-avatar size="xl" color="secondary" text-color="white" icon="account_circle" />
         </router-link>
-      </q-toolbar>
+      </q-toolbar> -->
     </q-header>
 
     <q-page-container>
@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAuth0 } from '@auth0/auth0-vue';
+/* import { useAuth0 } from '@auth0/auth0-vue';
 import { login } from 'src/services/authService';
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
@@ -33,5 +33,5 @@ onMounted(async () => {
   } else {
     await useRouter().push('/home');
   }
-});
+}); */
 </script>
