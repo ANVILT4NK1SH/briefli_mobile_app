@@ -26,7 +26,6 @@
       <div class="q-pa-xs">
         <!-- Grid layout for displaying file cards -->
         <div class="row justify-center">
-          <!-- <pre>{{ files }}</pre> -->
           <q-card
             v-for="file in filteredFiles"
             :key="file.fileName"
@@ -81,51 +80,7 @@
         </div>
       </div>
     </q-pull-to-refresh>
-
-    <!-- Sticky toolbar for filtering files by status -->
-    <q-page-sticky expand position="top">
-      <q-toolbar class="items-stretch bg-custombg justify-center z-top q-pa-none q-pt-xs">
-        <!-- Filter buttons for different file statuses -->
-        <q-btn
-          :class="filterByStatus === statusReviewNeeded ? 'selected q-ma-xs' : 'q-ma-xs bg-white'"
-          padding="xs lg"
-          @click="((filterByStatus = statusReviewNeeded), (clientUnassigned = false))"
-        >
-          <p style="font-size: smaller; margin: 0">Review Needed</p>
-        </q-btn>
-        <q-btn
-          :class="
-            clientUnassigned === true
-              ? 'q-ma-xs justify-center items-center selected'
-              : 'q-ma-xs bg-primary justify-center items-center'
-          "
-          @click="((clientUnassigned = true), (filterByStatus = ['']))"
-        >
-          <p style="font-size: smaller; margin: 0">Unassigned</p>
-        </q-btn>
-        <q-btn
-          :class="filterByStatus === statusOk ? 'selected q-ma-xs' : 'q-ma-xs bg-white'"
-          padding="xs lg"
-          @click="((filterByStatus = statusOk), (clientUnassigned = false))"
-        >
-          <p style="font-size: smaller; margin: 0">Exported</p>
-        </q-btn>
-        <q-btn
-          :class="filterByStatus === statusError ? 'selected q-ma-xs' : 'q-ma-xs bg-white'"
-          padding="xs lg"
-          @click="((filterByStatus = statusError), (clientUnassigned = false))"
-        >
-          <p style="font-size: smaller; margin: 0">Failed</p>
-        </q-btn>
-        <q-btn
-          :class="filterByStatus === statusAll ? 'selected q-ma-xs' : 'q-ma-xs bg-white'"
-          padding="xs lg"
-          @click="((filterByStatus = statusAll), (clientUnassigned = false))"
-        >
-          <p style="font-size: smaller; margin: 0">All</p>
-        </q-btn>
-      </q-toolbar>
-    </q-page-sticky>
+    <StatusToolbar />
   </q-page-container>
 </template>
 
@@ -133,27 +88,16 @@
 import { useAuth0 } from '@auth0/auth0-vue';
 import { login } from 'src/services/authService';
 import { onMounted, ref, watch } from 'vue';
-import {
-  filteredFiles,
-  filterByStatus,
-  files,
-  statusAll,
-  statusError,
-  statusOk,
-  clientUnassigned,
-  statusReviewNeeded,
-  getFileCategoryStatus,
-} from 'src/services/fileService';
+import { filteredFiles, files, getFileCategoryStatus } from 'src/services/fileService';
 import { apiService } from 'src/services/apiService';
-import type { Client } from './models';
-import { getClients } from 'src/services/clientService';
+import { clients, getClientName, getClients } from 'src/services/clientService';
 import PdfViewer from './PdfViewer.vue';
 import { onUnmounted } from 'vue';
 import { useQuasar } from 'quasar';
 import type { QNotifyOptions } from 'quasar';
+import StatusToolbar from './StatusToolbar.vue';
 
 const auth0 = useAuth0();
-const clients = ref<Client[]>([]);
 const pdfUrl = ref<string>('');
 const showPdfModal = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
@@ -219,12 +163,6 @@ const getPageData = async () => {
   } catch (error) {
     console.error('Error fetching data:', error);
   }
-};
-
-// Retrieve client name based on client ID
-const getClientName = (clientId: string) => {
-  const client = clients.value.find((client) => client.clientId === clientId);
-  return client ? client.name : '';
 };
 
 // Load and display a document in the PDF viewer

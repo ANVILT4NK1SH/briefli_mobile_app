@@ -58,13 +58,12 @@
 import { onMounted, ref, watch } from 'vue';
 import { QFile, useQuasar } from 'quasar';
 import { apiService } from 'src/services/apiService';
-import { getClients } from 'src/services/clientService';
+import { getClients, selectedClient } from 'src/services/clientService';
 import type { Client } from './models';
 import type { QNotifyOptions } from 'quasar';
 import PdfViewer from './PdfViewer.vue';
 
 const selectedFile = ref<File | null>(null);
-const selectedClient = ref(null);
 const clients = ref<Client[]>([]);
 const clientNames = ref<string[]>([]);
 const $q = useQuasar();
