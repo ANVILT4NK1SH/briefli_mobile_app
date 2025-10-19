@@ -59,12 +59,41 @@
       @click="btnSelected = 'ai'"
     />
   </q-toolbar>
+
+  <q-dialog v-model="displayModal">
+    <UploadOptionModal @close="displayModal = false" @open="handleOpen" />
+  </q-dialog>
+
+  <q-dialog v-model="displayUploadPhotoModal">
+    <UploadPhotoModal @close="displayUploadPhotoModal = false" />
+  </q-dialog>
+
+  <q-dialog v-model="displayUploadFileModal">
+    <UploadFileModal @close="displayUploadFileModal = false" />
+  </q-dialog>
 </template>
 
 <script setup lang="ts">
+import UploadFileModal from './UploadFileModal.vue';
+import UploadOptionModal from './UploadOptionModal.vue';
+import UploadPhotoModal from './UploadPhotoModal.vue';
 import { filterByStatus, statusAll } from 'src/services/fileService';
 import { ref } from 'vue';
 
 const btnSelected = ref('home');
 const displayModal = ref(false);
+const displayUploadPhotoModal = ref(false);
+const displayUploadFileModal = ref(false);
+
+//receive values from UploadOption and open new modal
+function handleOpen(type: 'photo' | 'file') {
+  displayModal.value = false; // Close the UploadOptionModal
+
+  // Open the corresponding upload modal
+  if (type === 'photo') {
+    displayUploadPhotoModal.value = true;
+  } else if (type === 'file') {
+    displayUploadFileModal.value = true;
+  }
+}
 </script>
