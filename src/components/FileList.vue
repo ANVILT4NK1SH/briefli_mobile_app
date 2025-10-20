@@ -89,7 +89,6 @@ import { useAuth0 } from '@auth0/auth0-vue';
 import { login } from 'src/services/authService';
 import { onMounted, ref, watch } from 'vue';
 import { files, getFileCategoryStatus } from 'src/services/fileService';
-import { apiService } from 'src/services/apiService';
 import { clients, getClientName, getClients } from 'src/services/clientService';
 import PdfViewer from './PdfViewer.vue';
 import { onUnmounted } from 'vue';
@@ -177,7 +176,8 @@ const showDocument = async (filename: string, rotations: number[]) => {
       window.URL.revokeObjectURL(pdfUrl.value);
     }
 
-    pdfUrl.value = await apiService.getDocument(filename, rotations);
+    await fileStore.getDocumentByFileName(filename, rotations); //make call using params
+    pdfUrl.value = fileStore.pdfBlob; //set new value from store
     console.log('PDF loaded:', filename);
     isLoading.value = false;
     showPdfModal.value = true;
