@@ -14,17 +14,19 @@
 
 <script setup lang="ts">
 import { clientNames, getAllClientNames, selectedClient } from 'src/services/clientService';
-import { filterFilesByClientId } from 'src/services/fileService';
 import { onMounted } from 'vue';
+import { useFileStore } from 'src/stores/FileStore';
 
-const emit = defineEmits(['toggle']);
+const emit = defineEmits(['toggle']); //could use
+const fileStore = useFileStore();
 
 onMounted(() => {
   clientNamesPlusUnassigned();
 });
 
 function clickHandler(selectedClient: string) {
-  filterFilesByClientId(selectedClient)
+  fileStore
+    .filterByClientId(selectedClient)
     .then(() => {
       toggleCard();
     })
