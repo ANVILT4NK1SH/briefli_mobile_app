@@ -5,12 +5,7 @@ import { getClientId } from 'src/services/clientService';
 
 export const useFileStore = defineStore('FileStore', {
   state: () => ({ files: [] as ImportedDocument[], pdfBlob: '' }), //returns state
-  getters: {
-    //filter by status
-    //get color by type
-    //time elapsed
-    //abbreviate
-  },
+  getters: {},
   actions: {
     //api calls
     async getFilesFromApi() {
@@ -19,7 +14,7 @@ export const useFileStore = defineStore('FileStore', {
     async getDocumentByFileName(filename: string, rotations: number[]) {
       this.pdfBlob = await apiService.getDocument(filename, rotations); //returns url string
     },
-    async filterByCLientId(clientName: string) {
+    async filterByClientId(clientName: string) {
       await this.getFilesFromApi(); // needed for when user filters then filters again (reset files)
       const clientId = getClientId(clientName); //convert client name to id
 
@@ -30,5 +25,9 @@ export const useFileStore = defineStore('FileStore', {
       }
       return this.files;
     },
+    //filter by status
+    //get color by type
+    //time elapsed
+    //abbreviate
   },
 });
