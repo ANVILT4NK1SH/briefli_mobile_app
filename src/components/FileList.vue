@@ -104,7 +104,6 @@ const isLoading = ref<boolean>(false);
 const currentFileName = ref<string>('');
 const $q = useQuasar();
 const fileStore = useFileStore();
-await fileStore.getFilesFromApi();
 
 // Lifecycle hook to initialize component
 onMounted(async () => {
@@ -129,6 +128,7 @@ onMounted(async () => {
   // Fetch initial page data
   try {
     await getPageData();
+    await fileStore.getFilesFromApi();
   } catch (error) {
     console.error('Error fetching data:', error);
   }
