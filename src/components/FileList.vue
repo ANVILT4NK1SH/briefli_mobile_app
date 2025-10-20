@@ -27,7 +27,7 @@
         <!-- Grid layout for displaying file cards -->
         <div class="row justify-center">
           <q-card
-            v-for="file in filteredFiles"
+            v-for="file in fileStore.files"
             :key="file.fileName"
             class="q-pa-sm q-ma-xs justify-center"
             style="width: 21rem"
@@ -88,7 +88,7 @@
 import { useAuth0 } from '@auth0/auth0-vue';
 import { login } from 'src/services/authService';
 import { onMounted, ref, watch } from 'vue';
-import { filteredFiles, files, getFileCategoryStatus } from 'src/services/fileService';
+import { files, getFileCategoryStatus } from 'src/services/fileService';
 import { apiService } from 'src/services/apiService';
 import { clients, getClientName, getClients } from 'src/services/clientService';
 import PdfViewer from './PdfViewer.vue';
@@ -96,6 +96,7 @@ import { onUnmounted } from 'vue';
 import { useQuasar } from 'quasar';
 import type { QNotifyOptions } from 'quasar';
 import StatusToolbar from './StatusToolbar.vue';
+import { useFileStore } from 'src/stores/FileStore';
 
 const auth0 = useAuth0();
 const pdfUrl = ref<string>('');
@@ -103,6 +104,8 @@ const showPdfModal = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 const currentFileName = ref<string>('');
 const $q = useQuasar();
+const fileStore = useFileStore();
+await fileStore.getFilesFromApi();
 
 // Lifecycle hook to initialize component
 onMounted(async () => {
@@ -156,8 +159,6 @@ const refresh = async (done: (cancel?: boolean) => void) => {
 // Fetch files and clients data from API
 const getPageData = async () => {
   try {
-    const response = await apiService.getFiles();
-    files.value = response.data;
     clients.value = await getClients();
     console.log('Files fetched:', files.value);
   } catch (error) {
