@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia';
+import type { ImportedDocument } from 'src/components/models';
 import { apiService } from 'src/services/apiService';
 
 export const useFileStore = defineStore('FileStore', {
-  state: () => ({ files: [] }), //returns state
+  state: () => ({ files: [] as ImportedDocument[] }), //returns state
   getters: {},
   actions: {
     //api call
