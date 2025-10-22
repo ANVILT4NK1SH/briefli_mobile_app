@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 import type { ImportedDocument } from 'src/components/models';
 import { apiService } from 'src/services/apiService';
-import { getClientId } from 'src/services/clientService';
 import { ref } from 'vue';
+import { useClientStore } from './ClientStore';
 
 export const useFileStore = defineStore('FileStore', {
   state: () => ({
@@ -92,7 +92,8 @@ export const useFileStore = defineStore('FileStore', {
     //filter by client id
     async filterByClientId(clientName: string) {
       await this.getFilesFromApi(); // needed for when user filters then filters again (reset files)
-      const clientId = getClientId(clientName); //convert client name to id
+      const clientStore = useClientStore();
+      const clientId = clientStore.getClientIdByName(clientName); //convert client name to id
 
       if (clientName === 'Unassigned') {
         this.files = this.files.filter((file) => file.clientId === null); //filter files by NO id
