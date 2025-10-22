@@ -74,7 +74,7 @@
             </div>
             <!-- Timestamp outside 'row' div (below all in UI)-->
             <q-item-section side left class="q-pt-sm q-pl-md">
-              <q-item-label caption>{{ timeElapsed(file.createdAt) }} </q-item-label>
+              <q-item-label caption>{{ fileStore.timeElapsed(file.createdAt) }} </q-item-label>
             </q-item-section>
           </q-card>
         </div>
@@ -168,7 +168,6 @@ const getPageData = async () => {
 
 // Load and display a document in the PDF viewer
 const showDocument = async (filename: string, rotations: number[]) => {
-  console.log('showDocument Fires');
   isLoading.value = true;
   currentFileName.value = filename;
 
@@ -206,8 +205,7 @@ const closePreview = () => {
 };
 
 // Calculate time elapsed since upload
-const timeElapsed = (timeCreated: string): string => {
-  console.log('timeElapsed Fires');
+/* const timeElapsed = (timeCreated: string): string => {
   const elapsedTime = (new Date().getTime() - new Date(timeCreated).getTime()) / (1000 * 60);
 
   const result =
@@ -222,7 +220,7 @@ const timeElapsed = (timeCreated: string): string => {
           : `uploaded ${(elapsedTime / (60 * 24)).toFixed()} days ago`;
 
   return result;
-};
+}; */
 
 // Clean up resources when component is unmounted
 onUnmounted(() => {

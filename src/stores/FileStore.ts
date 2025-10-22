@@ -113,9 +113,23 @@ export const useFileStore = defineStore('FileStore', {
         JSON.stringify([...status].sort()) === JSON.stringify([...this.statusAll].sort())
       );
     },
-  },
 
-  //get color by type
-  //time elapsed
-  //abbreviate
+    //time elapsed
+    timeElapsed(timeCreated: string): string {
+      const elapsedTime = (new Date().getTime() - new Date(timeCreated).getTime()) / (1000 * 60);
+
+      const result =
+        elapsedTime < 60
+          ? `uploaded ${elapsedTime.toFixed()} minutes ago`
+          : elapsedTime / 60 < 24
+            ? elapsedTime / 60 < 2 && elapsedTime / 60 > 0
+              ? `uploaded ${(elapsedTime / 60).toFixed()} hour ago`
+              : `uploaded ${(elapsedTime / 60).toFixed()} hours ago`
+            : elapsedTime / (60 * 24) < 2 && elapsedTime / (60 * 24) > 0
+              ? `uploaded ${(elapsedTime / (60 * 24)).toFixed()} day ago`
+              : `uploaded ${(elapsedTime / (60 * 24)).toFixed()} days ago`;
+
+      return result;
+    },
+  },
 });
