@@ -46,7 +46,6 @@ export const useClientStore = defineStore('ClientStore', {
 
         this.clients = response.data.clients;
         this.updateClientNames();
-        console.log('Clients fetched:', this.clients);
         return this.clients;
       } catch (error) {
         console.error('Error fetching clients:', error);

@@ -93,17 +93,17 @@
 </template>
 
 <script setup lang="ts">
-import { getAllClientNames } from 'src/services/clientService';
-
 import { onMounted, ref } from 'vue';
 import { useFileStore } from 'src/stores/FileStore';
 import CardFilterByClient from './CardFilterByClient.vue';
+import { useClientStore } from 'src/stores/ClientStore';
 
+const clientStore = useClientStore();
 const fileStore = useFileStore();
 const toggleSelectClient = ref(false);
 
-onMounted(() => {
-  getAllClientNames();
+onMounted(async () => {
+  await clientStore.getClients(); //client names update within
 });
 
 function toggleSelectClientState() {
