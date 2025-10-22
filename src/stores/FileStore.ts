@@ -18,23 +18,6 @@ export const useFileStore = defineStore('FileStore', {
     statusAll: ref<string[]>([]),
   }),
   getters: {
-    //filter by status?
-    /*  filteredFiles: (state) => {
-      let result = state.files;
-
-      // Filter by client unassigned
-      if (state.clientUnassigned) {
-        result = result.filter((file) => !file.clientId);
-      }
-
-      // Filter by status, only if any status is selected
-      if (state.statusBeingFiltered.length > 0) {
-        result = result.filter((file) => state.statusBeingFiltered.includes(file.status));
-      }
-
-      return result;
-    }, */
-
     getFiles: (state) => {
       return state.files;
     },
