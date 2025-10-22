@@ -43,10 +43,10 @@
               <q-item-section style="max-width: 60px" class="items-center">
                 <q-avatar
                   icon="description"
-                  :text-color="getColorByType(file.documentTypes[0] ?? 'Unknown')"
+                  :text-color="fileStore.getColorByType(file.documentTypes[0] ?? 'Unknown')"
                 />
                 <q-item-label>
-                  {{ docTypeAbbreviation(file.documentTypes[0]!) }}
+                  {{ fileStore.docTypeAbbreviation(file.documentTypes[0]!) }}
                 </q-item-label>
               </q-item-section>
 
@@ -157,6 +157,7 @@ const refresh = async (done: (cancel?: boolean) => void) => {
 
 // Fetch files and clients data from API
 const getPageData = async () => {
+  console.log('getPageData Fires');
   try {
     clients.value = await getClients();
     console.log('Files fetched:', fileStore.files);
@@ -167,6 +168,7 @@ const getPageData = async () => {
 
 // Load and display a document in the PDF viewer
 const showDocument = async (filename: string, rotations: number[]) => {
+  console.log('showDocument Fires');
   isLoading.value = true;
   currentFileName.value = filename;
 
@@ -203,24 +205,9 @@ const closePreview = () => {
   }
 };
 
-// Update the icon color using file type
-const getColorByType = (fileType: string): string => {
-  switch (fileType) {
-    case 'Packing List':
-      return 'blue';
-    case 'Bill of Lading':
-      return 'green';
-    case 'Commercial Invoice':
-      return 'red';
-    case 'Uknown':
-      return 'grey';
-    default:
-      return 'grey';
-  }
-};
-
 // Calculate time elapsed since upload
 const timeElapsed = (timeCreated: string): string => {
+  console.log('timeElapsed Fires');
   const elapsedTime = (new Date().getTime() - new Date(timeCreated).getTime()) / (1000 * 60);
 
   const result =
@@ -235,22 +222,6 @@ const timeElapsed = (timeCreated: string): string => {
           : `uploaded ${(elapsedTime / (60 * 24)).toFixed()} days ago`;
 
   return result;
-};
-
-// Abbreviate file.documentType for display
-const docTypeAbbreviation = (docType: string): string => {
-  switch (docType) {
-    case 'Packing List':
-      return 'PL';
-    case 'Bill of Lading':
-      return 'BOL';
-    case 'Commercial Invoice':
-      return 'INV';
-    case 'Uknown':
-      return 'UNK';
-    default:
-      return 'UNK';
-  }
 };
 
 // Clean up resources when component is unmounted

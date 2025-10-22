@@ -21,6 +21,38 @@ export const useFileStore = defineStore('FileStore', {
     getFiles: (state) => {
       return state.files;
     },
+    getColorByType:
+      () =>
+      (fileType: string): string => {
+        switch (fileType) {
+          case 'Packing List':
+            return 'blue';
+          case 'Bill of Lading':
+            return 'green';
+          case 'Commercial Invoice':
+            return 'red';
+          case 'Unknown':
+            return 'grey';
+          default:
+            return 'grey';
+        }
+      },
+    docTypeAbbreviation:
+      () =>
+      (docType: string): string => {
+        switch (docType) {
+          case 'Packing List':
+            return 'PL';
+          case 'Bill of Lading':
+            return 'BOL';
+          case 'Commercial Invoice':
+            return 'INV';
+          case 'Unknown':
+            return 'UNK';
+          default:
+            return 'UNK';
+        }
+      },
   },
   actions: {
     //spread all statuses into statusAll
