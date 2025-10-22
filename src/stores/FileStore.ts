@@ -49,9 +49,11 @@ export const useFileStore = defineStore('FileStore', {
     async getFilesFromApi() {
       this.files = (await apiService.getFiles()).data; //get files data and assign to files[] in state
     },
+    //getting individual docs
     async getDocumentByFileName(filename: string, rotations: number[]) {
-      this.pdfBlob = await apiService.getDocument(filename, rotations); //returns url string
+      this.pdfUrl = await apiService.getDocument(filename, rotations); //returns url string
     },
+    //filter by client id
     async filterByClientId(clientName: string) {
       await this.getFilesFromApi(); // needed for when user filters then filters again (reset files)
       const clientId = getClientId(clientName); //convert client name to id
@@ -63,9 +65,42 @@ export const useFileStore = defineStore('FileStore', {
       }
       return this.files;
     },
-    //filter by status
-    //get color by type
-    //time elapsed
-    //abbreviate
+    //filter existing files by status
+    async filterByStatus(status: string[], clientUnassigned: boolean) {
+      // reset files array
+      await this.getFilesFromApi();
+
+      // set files array to variable
+      let filteredFiles = this.files;
+
+      // set filter by status and clientUnassigned
+      this.statusBeingFiltered = status;
+      this.clientUnassigned = clientUnassigned;
+
+      // fitler by clientUnassigned
+      if (clientUnassigned) {
+        filteredFiles = filteredFiles.filter((file) => !file.clientId);
+      }
+
+      // filter by status unless status is 'all' (via helper function)
+      if (status.length > 0 && !this.isStatusAll(status)) {
+        filteredFiles = filteredFiles.filter((file) => status.includes(file.status));
+      }
+
+      this.files = filteredFiles;
+      return this.files;
+    },
+
+    // helper to check if we're showing all statuses
+    isStatusAll(status: string[]): boolean {
+      return (
+        status.length === this.statusAll.length ||
+        JSON.stringify([...status].sort()) === JSON.stringify([...this.statusAll].sort())
+      );
+    },
   },
+
+  //get color by type
+  //time elapsed
+  //abbreviate
 });
