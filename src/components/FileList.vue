@@ -61,14 +61,14 @@
                 <q-item-label
                   caption
                   :class="{
-                    'bg-positive': getFileCategoryStatus(file.status) === 'completed',
-                    'bg-negative': getFileCategoryStatus(file.status) === 'failed',
-                    'bg-warning': getFileCategoryStatus(file.status) === 'processing',
-                    'bg-info': getFileCategoryStatus(file.status) === 'loading',
+                    'bg-positive': fileStore.getFileCategoryStatus(file.status) === 'completed',
+                    'bg-negative': fileStore.getFileCategoryStatus(file.status) === 'failed',
+                    'bg-warning': fileStore.getFileCategoryStatus(file.status) === 'processing',
+                    'bg-info': fileStore.getFileCategoryStatus(file.status) === 'loading',
                   }"
                   style="border-radius: 1rem; padding: 0.5rem; color: white"
                 >
-                  {{ getFileCategoryStatus(file.status) }}
+                  {{ fileStore.getFileCategoryStatus(file.status) }}
                 </q-item-label>
               </q-item-section>
             </div>
@@ -88,7 +88,6 @@
 import { useAuth0 } from '@auth0/auth0-vue';
 import { login } from 'src/services/authService';
 import { onMounted, ref, watch } from 'vue';
-import { getFileCategoryStatus } from 'src/services/fileService';
 import { clients, getClientName, getClients } from 'src/services/clientService';
 import PdfViewer from './PdfViewer.vue';
 import { onUnmounted } from 'vue';

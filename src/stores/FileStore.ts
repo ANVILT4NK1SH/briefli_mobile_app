@@ -53,6 +53,27 @@ export const useFileStore = defineStore('FileStore', {
             return 'UNK';
         }
       },
+    //unused?
+    isInProcessedQueue: (state) => {
+      return (status: string | undefined) => {
+        if (!status) return false;
+        return state.statusReviewNeeded.includes(status);
+      };
+    },
+    getFileCategoryStatus: (state) => {
+      return (status: string | undefined) => {
+        if (status) {
+          if (state.statusError.includes(status)) {
+            return 'failed';
+          } else if (state.statusOk.includes(status)) {
+            return 'completed';
+          } else if (state.statusReviewNeeded.includes(status)) {
+            return 'processing';
+          }
+        }
+        return 'loading';
+      };
+    },
   },
   actions: {
     //spread all statuses into statusAll
