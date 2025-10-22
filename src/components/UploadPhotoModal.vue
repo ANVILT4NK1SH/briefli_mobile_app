@@ -5,7 +5,6 @@
   >
     Please wait for Photo to upload!
     <q-img src="img\logos\briefli-reveal-light.gif" />
-    <!-- <q-circular-progress indeterminate rounded size="50px" color="primary" class="q-ma-md z-top" /> -->
   </div>
   <div v-else-if="isUploaded" class="q-pa-md bg-tranparentBlack flex flex-center column">
     <q-btn
@@ -18,7 +17,7 @@
   <q-card v-else class="q-pa-md custom-rounded column justify center">
     <q-select
       v-model="selectedClient"
-      :options="clientNames"
+      :options="clientStore.getAllClientNames"
       label="Select Client"
       clearable
       use-input
@@ -48,13 +47,14 @@ import { onMounted, ref } from 'vue';
 import { useQuasar, type QNotifyOptions } from 'quasar';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { apiService } from 'src/services/apiService';
-import { getClients } from 'src/services/clientService';
-import type { Client } from './models';
+import { useClientStore } from 'src/stores/ClientStore';
+import { useFileStore } from 'src/stores/FileStore';
 
-const selectedClient = ref(null);
-const clients = ref<Client[]>([]);
-const clientNames = ref<string[]>([]);
+const clientStore = useClientStore();
+const fileStore = useFileStore();
 const $q = useQuasar();
+
+const selectedClient = ref<string | null>(null);
 const imageUrl = ref<string>('');
 const file = ref<File | null>(null);
 const filename = ref('');
@@ -62,8 +62,7 @@ const isUploaded = ref(false);
 const isUploading = ref(false);
 
 onMounted(async () => {
-  clients.value = await getClients();
-  clientNames.value = clients.value.map((client) => client.name);
+  await clientStore.getClients();
 });
 
 const capturePhoto = async () => {
@@ -136,7 +135,6 @@ const uploadPhoto = async () => {
     console.error('Upload error:', err);
     isUploading.value = false;
   }
-  console.log(await apiService.getFiles());
 };
 
 const takeNewPhoto = () => {
