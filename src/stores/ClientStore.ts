@@ -18,8 +18,8 @@ export const useClientStore = defineStore('ClientStore', {
     getSelectedClient: (state) => state.selectedClient,
 
     // Client names including "Unassigned"
-    getClientNamesWithUnassigned: (state) => {
-      return [...state.clientNames, 'Unassigned'];
+    getClientNamesWithUnassignedandAll: (state) => {
+      return [...state.clientNames, 'Unassigned', 'All'];
     },
 
     // Get client name by ID

@@ -89,13 +89,15 @@ export const useFileStore = defineStore('FileStore', {
     async getDocumentByFileName(filename: string, rotations: number[]) {
       this.pdfUrl = await apiService.getDocument(filename, rotations); //returns url string
     },
-    //filter by client id
+    //filter files by client id
     async filterByClientId(clientName: string) {
       await this.getFilesFromApi(); // needed for when user filters then filters again (reset files)
       const clientStore = useClientStore();
       const clientId = clientStore.getClientIdByName(clientName); //convert client name to id
 
-      if (clientName === 'Unassigned') {
+      if (clientName === 'All') {
+        //this.files should contain all from getFilesFromApi
+      } else if (clientName === 'Unassigned') {
         this.files = this.files.filter((file) => file.clientId === null); //filter files by NO id
       } else {
         this.files = this.files.filter((file) => file.clientId === clientId); //filter files by id

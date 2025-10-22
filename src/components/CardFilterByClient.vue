@@ -2,7 +2,7 @@
   <q-card class="q-pa-md column flex flex-center column custom-rounded">
     <q-select
       v-model="selectedClient"
-      :options="clientStore.getClientNamesWithUnassigned"
+      :options="clientStore.getClientNamesWithUnassignedandAll"
       label="Select Client"
       clearable
       use-input
