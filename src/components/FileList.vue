@@ -53,7 +53,9 @@
               <!-- Center section with file name and client name -->
               <q-item-section>
                 <q-item-label>{{ file.displayName }}</q-item-label>
-                <q-item-label caption>{{ getClientName(file.clientId) }}</q-item-label>
+                <q-item-label caption>{{
+                  clientStore.getClientNameById(file.clientId)
+                }}</q-item-label>
               </q-item-section>
 
               <!-- Right section with file status badge -->
@@ -88,13 +90,15 @@
 import { useAuth0 } from '@auth0/auth0-vue';
 import { login } from 'src/services/authService';
 import { onMounted, ref, watch } from 'vue';
-import { clients, getClientName, getClients } from 'src/services/clientService';
 import PdfViewer from './PdfViewer.vue';
 import { onUnmounted } from 'vue';
 import { useQuasar } from 'quasar';
 import type { QNotifyOptions } from 'quasar';
 import StatusToolbar from './StatusToolbar.vue';
 import { useFileStore } from 'src/stores/FileStore';
+import { useClientStore } from 'src/stores/ClientStore';
+
+const clientStore = useClientStore();
 
 const auth0 = useAuth0();
 const pdfUrl = ref<string>('');
@@ -158,7 +162,7 @@ const refresh = async (done: (cancel?: boolean) => void) => {
 const getPageData = async () => {
   console.log('getPageData Fires');
   try {
-    clients.value = await getClients();
+    await clientStore.getClients();
     console.log('Files fetched:', fileStore.files);
   } catch (error) {
     console.error('Error fetching data:', error);
