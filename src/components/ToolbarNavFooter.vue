@@ -8,7 +8,7 @@
       label="Home"
       icon="home"
       style="background-color:"
-      @click="((btnSelected = 'home'), (filterByStatus = statusAll))"
+      @click="((btnSelected = 'home'), fileStore.statusAll)"
     />
 
     <q-btn
@@ -77,9 +77,10 @@
 import UploadFileModal from './UploadFileModal.vue';
 import UploadOptionModal from './UploadOptionModal.vue';
 import UploadPhotoModal from './UploadPhotoModal.vue';
-import { filterByStatus, statusAll } from 'src/services/fileService';
 import { ref } from 'vue';
+import { useFileStore } from 'src/stores/FileStore';
 
+const fileStore = useFileStore();
 const btnSelected = ref('home');
 const displayModal = ref(false);
 const displayUploadPhotoModal = ref(false);

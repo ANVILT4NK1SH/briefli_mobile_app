@@ -4,48 +4,75 @@
     <q-toolbar class="items-stretch bg-custombg justify-center z-top q-pa-none q-pt-xs">
       <!-- Filter buttons for different file statuses -->
       <q-btn
-        :class="filterByStatus === statusReviewNeeded ? 'selected q-ma-xs' : 'q-ma-xs bg-white'"
+        :class="
+          fileStore.statusBeingFiltered === fileStore.statusReviewNeeded
+            ? 'selected q-ma-xs'
+            : 'q-ma-xs bg-white'
+        "
         padding="xs lg"
-        @click="((filterByStatus = statusReviewNeeded), (clientUnassigned = false))"
+        @click="
+          fileStore.filterByStatus(
+            fileStore.statusReviewNeeded,
+            (fileStore.clientUnassigned = false),
+          )
+        "
       >
         <p style="font-size: smaller; margin: 0">Review Needed</p>
       </q-btn>
       <q-btn
         v-if="$route.path === '/home'"
         :class="
-          clientUnassigned === true
+          fileStore.clientUnassigned === true
             ? 'q-ma-xs justify-center items-center selected'
             : 'q-ma-xs bg-primary justify-center items-center'
         "
-        @click="((clientUnassigned = true), (filterByStatus = ['']))"
+        @click="fileStore.filterByStatus(fileStore.statusAll, (fileStore.clientUnassigned = true))"
       >
         <p style="font-size: smaller; margin: 0">Unassigned</p>
       </q-btn>
       <q-btn
-        :class="filterByStatus === statusOk ? 'selected q-ma-xs' : 'q-ma-xs bg-white'"
+        :class="
+          fileStore.statusBeingFiltered === fileStore.statusOk
+            ? 'selected q-ma-xs'
+            : 'q-ma-xs bg-white'
+        "
         padding="xs lg"
-        @click="((filterByStatus = statusOk), (clientUnassigned = false))"
+        @click="fileStore.filterByStatus(fileStore.statusOk, (fileStore.clientUnassigned = false))"
       >
         <p style="font-size: smaller; margin: 0">Exported</p>
       </q-btn>
       <q-btn
-        :class="filterByStatus === statusError ? 'selected q-ma-xs' : 'q-ma-xs bg-white'"
+        :class="
+          fileStore.statusBeingFiltered === fileStore.statusError
+            ? 'selected q-ma-xs'
+            : 'q-ma-xs bg-white'
+        "
         padding="xs lg"
-        @click="((filterByStatus = statusError), (clientUnassigned = false))"
+        @click="
+          fileStore.filterByStatus(fileStore.statusError, (fileStore.clientUnassigned = false))
+        "
       >
         <p style="font-size: smaller; margin: 0">Failed</p>
       </q-btn>
       <q-btn
         v-if="$route.path === '/home'"
-        :class="filterByStatus === statusAll ? 'selected q-ma-xs' : 'q-ma-xs bg-white'"
+        :class="
+          fileStore.statusBeingFiltered === fileStore.statusAll
+            ? 'selected q-ma-xs'
+            : 'q-ma-xs bg-white'
+        "
         padding="xs lg"
-        @click="((filterByStatus = statusAll), (clientUnassigned = false))"
+        @click="fileStore.filterByStatus(fileStore.statusAll, (fileStore.clientUnassigned = false))"
       >
         <p style="font-size: smaller; margin: 0">All</p>
       </q-btn>
       <q-btn
         v-else-if="$route.path === '/review'"
-        :class="filterByStatus === statusAll ? 'selected q-ma-xs' : 'q-ma-xs bg-white'"
+        :class="
+          fileStore.statusBeingFiltered === fileStore.statusAll
+            ? 'selected q-ma-xs'
+            : 'q-ma-xs bg-white'
+        "
         padding="xs lg"
         @click="toggleSelectClient = !toggleSelectClient"
       >
@@ -67,17 +94,12 @@
 
 <script setup lang="ts">
 import { getAllClientNames } from 'src/services/clientService';
-import {
-  filterByStatus,
-  statusAll,
-  statusError,
-  statusOk,
-  clientUnassigned,
-  statusReviewNeeded,
-} from 'src/services/fileService';
+
 import { onMounted, ref } from 'vue';
+import { useFileStore } from 'src/stores/FileStore';
 import CardFilterByClient from './CardFilterByClient.vue';
 
+const fileStore = useFileStore();
 const toggleSelectClient = ref(false);
 
 onMounted(() => {

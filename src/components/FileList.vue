@@ -88,7 +88,7 @@
 import { useAuth0 } from '@auth0/auth0-vue';
 import { login } from 'src/services/authService';
 import { onMounted, ref, watch } from 'vue';
-import { files, getFileCategoryStatus } from 'src/services/fileService';
+import { getFileCategoryStatus } from 'src/services/fileService';
 import { clients, getClientName, getClients } from 'src/services/clientService';
 import PdfViewer from './PdfViewer.vue';
 import { onUnmounted } from 'vue';
@@ -159,7 +159,7 @@ const refresh = async (done: (cancel?: boolean) => void) => {
 const getPageData = async () => {
   try {
     clients.value = await getClients();
-    console.log('Files fetched:', files.value);
+    console.log('Files fetched:', fileStore.files);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -177,7 +177,7 @@ const showDocument = async (filename: string, rotations: number[]) => {
     }
 
     await fileStore.getDocumentByFileName(filename, rotations); //make call using params
-    pdfUrl.value = fileStore.pdfBlob; //set new value from store
+    pdfUrl.value = fileStore.pdfUrl; //set new value from store
     console.log('PDF loaded:', filename);
     isLoading.value = false;
     showPdfModal.value = true;
@@ -233,7 +233,6 @@ const timeElapsed = (timeCreated: string): string => {
         : elapsedTime / (60 * 24) < 2 && elapsedTime / (60 * 24) > 0
           ? `uploaded ${(elapsedTime / (60 * 24)).toFixed()} day ago`
           : `uploaded ${(elapsedTime / (60 * 24)).toFixed()} days ago`;
-  console.log('result:', result);
 
   return result;
 };
