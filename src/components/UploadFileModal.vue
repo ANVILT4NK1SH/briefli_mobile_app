@@ -16,8 +16,8 @@
   </div>
   <q-card v-else class="q-pa-md column flex flex-center column custom-rounded">
     <q-select
-      v-model="selectedClient"
-      :options="clientNames"
+      v-model="clientStore.selectedClient"
+      :options="clientStore.getAllClientNames"
       label="Select Client"
       clearable
       use-input
@@ -58,14 +58,16 @@
 import { onMounted, ref, watch } from 'vue';
 import { QFile, useQuasar } from 'quasar';
 import { apiService } from 'src/services/apiService';
-import { getClients, selectedClient } from 'src/services/clientService';
-import type { Client } from './models';
 import type { QNotifyOptions } from 'quasar';
 import PdfViewer from './PdfViewer.vue';
+import { useClientStore } from 'src/stores/ClientStore';
+import { useFileStore } from 'src/stores/FileStore';
 
-const selectedFile = ref<File | null>(null);
-const clients = ref<Client[]>([]);
-const clientNames = ref<string[]>([]);
+const clientStore = useClientStore();
+const fileStore = useFileStore();
+
+const selectedFile = ref<File | null>(null); //keep; used for upload, not state
+
 const $q = useQuasar();
 const file = ref<File | null>(null);
 const filename = ref('');
@@ -79,8 +81,7 @@ const showPdfModal = ref<boolean>(false);
 const isImage = ref<boolean>(false);
 
 onMounted(async () => {
-  clients.value = await getClients();
-  clientNames.value = clients.value.map((client) => client.name);
+  await clientStore.getClients();
 });
 
 // Watch for changes to selectedFile to clean up previous URLs
@@ -123,23 +124,31 @@ const onFileSelected = () => {
 };
 
 const uploadSelectedFile = async () => {
+  // ensure file attached
+  if (!file.value) {
+    $q.notify({
+      message: 'No file selected',
+      color: 'negative',
+    } as QNotifyOptions);
+    return;
+  }
+
   isUploading.value = true;
   try {
-    const clientId = ref('');
-    if (selectedClient.value) {
-      clientId.value = clients.value.find(
-        (client) => client.name === selectedClient.value,
-      )!.clientId;
-    }
+    const clientId = clientStore.selectedClient
+      ? clientStore.getClientIdByName(clientStore.selectedClient)
+      : '';
 
-    const responseStatus = ref(
-      await apiService.uploadFile(filename.value, clientId.value, file.value!),
-    );
-    if (responseStatus.value === 200) {
+    const responseStatus = await apiService.uploadFile(filename.value, clientId, file.value);
+
+    if (responseStatus === 200) {
       $q.notify({
         message: 'File successfully uploaded',
         color: 'positive',
       } as QNotifyOptions);
+
+      await fileStore.getFilesFromApi(); //refresh files on upload success
+
       isUploaded.value = true;
       isUploading.value = false;
     } else {
@@ -147,7 +156,7 @@ const uploadSelectedFile = async () => {
         message: 'Failed file upload',
         color: 'negative',
       } as QNotifyOptions);
-      console.error('Response status:', responseStatus.value);
+      console.error('Response status:', responseStatus);
       isUploading.value = false;
     }
   } catch (err: unknown) {
@@ -158,7 +167,6 @@ const uploadSelectedFile = async () => {
     console.error('Upload error:', err);
     isUploading.value = false;
   }
-  console.log(await apiService.getFiles());
 };
 
 const closePreview = () => {
@@ -173,8 +181,9 @@ const closePreview = () => {
 };
 
 const selectAnotherFile = () => {
-  selectedClient.value = null;
+  clientStore.clearSelectedClient();
   file.value = null;
+  selectedFile.value = null;
   filename.value = '';
   isUploaded.value = false;
   isImage.value = false;
