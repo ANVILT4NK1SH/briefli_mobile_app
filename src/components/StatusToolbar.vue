@@ -66,7 +66,7 @@
       >
         <p style="font-size: smaller; margin: 0">All</p>
       </q-btn>
-      <q-btn
+      <q-btn-dropdown
         v-else-if="$route.path === '/review'"
         :class="
           fileStore.statusBeingFiltered === fileStore.statusAll
@@ -74,11 +74,20 @@
             : 'q-ma-xs bg-white'
         "
         padding="xs lg"
-        @click="toggleSelectClient = !toggleSelectClient"
+        :label="selectedClient"
       >
-        <q-icon stack name="search" size="inherit"></q-icon>
-        <p style="font-size: smaller; margin: 0">Client</p>
-      </q-btn>
+        <q-list>
+          <q-item-section
+            v-for="client in clientStore.getClientNamesWithUnassignedandAll"
+            :key="client"
+            @click="onItemClick(client)"
+          >
+            <q-item-label>{{ client }}</q-item-label>
+          </q-item-section>
+        </q-list>
+        <!-- <q-icon stack name="search" size="inherit"></q-icon>
+        <p style="font-size: smaller; margin: 0">{{ clientStore.getSelectedClient }}</p> -->
+      </q-btn-dropdown>
     </q-toolbar>
 
     <!-- dialog for filtering by client -->
@@ -101,10 +110,18 @@ import { useClientStore } from 'src/stores/ClientStore';
 const clientStore = useClientStore();
 const fileStore = useFileStore();
 const toggleSelectClient = ref(false);
+const selectedClient = ref<string>('All Clients');
 
 onMounted(async () => {
   await clientStore.getClients(); //client names update within
 });
+
+function onItemClick(client: string) {
+  selectedClient.value = client;
+  fileStore.filterByClientId(client).catch((error) => {
+    console.error('Error filtering files: ', error);
+  });
+}
 
 function toggleSelectClientState() {
   toggleSelectClient.value = !toggleSelectClient.value;
