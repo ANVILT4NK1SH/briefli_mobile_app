@@ -15,16 +15,6 @@
           {{ fileName }}
         </p>
       </div>
-
-      <!-- <div class="header-actions">
-        <q-btn
-          icon="download"
-          label="Download"
-          @click="downloadPdf"
-          :disabled="!pdfUrl"
-          class="download-btn"
-        />
-      </div> -->
     </div>
 
     <!-- PDF Content -->

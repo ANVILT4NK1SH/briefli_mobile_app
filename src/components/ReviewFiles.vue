@@ -5,10 +5,12 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import FileList from './FileList.vue';
-import { filterByStatus, statusReviewNeeded } from 'src/services/fileService';
+import { useFileStore } from 'src/stores/FileStore';
 
-onMounted(() => {
+const fileStore = useFileStore();
+
+onMounted(async () => {
   //feel like we could set the values in the service or something
-  filterByStatus.value = statusReviewNeeded.value;
+  await fileStore.filterByStatus(fileStore.statusReviewNeeded, fileStore.clientUnassigned);
 }); //when mounted, invoke fileService and pass filter values
 </script>

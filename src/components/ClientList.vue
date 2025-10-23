@@ -1,7 +1,7 @@
 <template>
   <q-page-container class="row justify-center" style="padding: 0; margin: 0">
     <q-card
-      v-for="client in clients"
+      v-for="client in clientStore.clients"
       :key="client.clientId"
       elevated
       class="q-ma-sm q-pa-sm"
@@ -35,13 +35,12 @@
 </template>
 
 <script setup lang="ts">
-import { getClients } from 'src/services/clientService';
-import { onMounted, ref } from 'vue';
-import type { Client } from './models';
+import { onMounted } from 'vue';
+import { useClientStore } from 'src/stores/ClientStore';
 
-const clients = ref<Client[]>([]);
+const clientStore = useClientStore();
 
 onMounted(async () => {
-  clients.value = await getClients();
+  await clientStore.getClients();
 });
 </script>

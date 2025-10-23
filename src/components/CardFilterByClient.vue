@@ -2,7 +2,7 @@
   <q-card class="q-pa-md column flex flex-center column custom-rounded">
     <q-select
       v-model="selectedClient"
-      :options="clientNames"
+      :options="clientStore.getClientNamesWithUnassignedandAll"
       label="Select Client"
       clearable
       use-input
@@ -13,18 +13,24 @@
 </template>
 
 <script setup lang="ts">
-import { clientNames, getAllClientNames, selectedClient } from 'src/services/clientService';
-import { filterFilesByClientId } from 'src/services/fileService';
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useFileStore } from 'src/stores/FileStore';
+import { useClientStore } from 'src/stores/ClientStore';
 
 const emit = defineEmits(['toggle']);
+const fileStore = useFileStore();
+const clientStore = useClientStore();
+const selectedClient = ref(null);
 
-onMounted(() => {
-  clientNamesPlusUnassigned();
+onMounted(async () => {
+  if (clientStore.clients.length === 0) {
+    await clientStore.getClients();
+  }
 });
 
 function clickHandler(selectedClient: string) {
-  filterFilesByClientId(selectedClient)
+  fileStore
+    .filterByClientId(selectedClient)
     .then(() => {
       toggleCard();
     })
@@ -35,10 +41,5 @@ function clickHandler(selectedClient: string) {
 
 function toggleCard() {
   emit('toggle');
-}
-
-function clientNamesPlusUnassigned() {
-  getAllClientNames(); //set all names
-  clientNames.value.push('Unassigned'); //push unassigned
 }
 </script>

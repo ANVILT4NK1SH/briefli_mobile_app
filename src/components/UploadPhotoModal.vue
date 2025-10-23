@@ -5,7 +5,6 @@
   >
     Please wait for Photo to upload!
     <q-img src="img\logos\briefli-reveal-light.gif" />
-    <!-- <q-circular-progress indeterminate rounded size="50px" color="primary" class="q-ma-md z-top" /> -->
   </div>
   <div v-else-if="isUploaded" class="q-pa-md bg-tranparentBlack flex flex-center column">
     <q-btn
@@ -18,7 +17,7 @@
   <q-card v-else class="q-pa-md custom-rounded column justify center">
     <q-select
       v-model="selectedClient"
-      :options="clientNames"
+      :options="clientStore.getAllClientNames"
       label="Select Client"
       clearable
       use-input
@@ -36,8 +35,8 @@
       class="q-mt-md"
       style="display: flex; flex-direction: column; align-items: center; justify-content: center"
     >
-      <img :src="imageUrl" alt="Captured Image" style="max-width: 300px" />
-      <p style="color: white">FILENAME: {{ filename }}</p>
+      <img :src="imageUrl" alt="Captured Image" style="max-width: 100%" />
+      <p color="primary">FILENAME: {{ filename }}</p>
       <q-btn label="Upload" color="secondary" @click="uploadPhoto" />
     </div>
   </q-card>
@@ -48,13 +47,14 @@ import { onMounted, ref } from 'vue';
 import { useQuasar, type QNotifyOptions } from 'quasar';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { apiService } from 'src/services/apiService';
-import { getClients } from 'src/services/clientService';
-import type { Client } from './models';
+import { useClientStore } from 'src/stores/ClientStore';
+import { useFileStore } from 'src/stores/FileStore';
 
-const selectedClient = ref(null);
-const clients = ref<Client[]>([]);
-const clientNames = ref<string[]>([]);
+const clientStore = useClientStore();
+const fileStore = useFileStore();
 const $q = useQuasar();
+
+const selectedClient = ref<string | null>(null);
 const imageUrl = ref<string>('');
 const file = ref<File | null>(null);
 const filename = ref('');
@@ -62,8 +62,7 @@ const isUploaded = ref(false);
 const isUploading = ref(false);
 
 onMounted(async () => {
-  clients.value = await getClients();
-  clientNames.value = clients.value.map((client) => client.name);
+  await clientStore.getClients();
 });
 
 const capturePhoto = async () => {
@@ -101,32 +100,38 @@ const capturePhoto = async () => {
 };
 
 const uploadPhoto = async () => {
+  // ensure upload has a file to send (to prevent error regarding file.value)
+  if (!file.value) {
+    $q.notify({
+      message: 'No file to upload',
+      color: 'negative',
+    } as QNotifyOptions);
+    return;
+  }
+
   isUploading.value = true;
   try {
-    const clientId = ref('');
-    if (selectedClient.value) {
-      clientId.value = clients.value.find(
-        (client) => client.name === selectedClient.value,
-      )!.clientId;
-    }
+    const clientId = selectedClient.value
+      ? clientStore.getClientIdByName(selectedClient.value)
+      : '';
 
-    const responseStatus = ref(
-      await apiService.uploadFile(filename.value, clientId.value, file.value!),
-    );
-    if (responseStatus.value === 200) {
+    const responseStatus = await apiService.uploadFile(filename.value, clientId, file.value);
+
+    if (responseStatus === 200) {
       $q.notify({
-        message: 'Photo uploaded',
+        message: 'Photo uploaded successfully',
         color: 'positive',
       } as QNotifyOptions);
+
+      await fileStore.getFilesFromApi(); //refresh file list
+
       isUploaded.value = true;
-      isUploading.value = false;
     } else {
       $q.notify({
-        message: 'Failed photo upload',
+        message: 'Failed to upload photo',
         color: 'negative',
       } as QNotifyOptions);
-      console.error('Response status:', responseStatus.value);
-      isUploading.value = false;
+      console.error('Upload failed with status:', responseStatus);
     }
   } catch (err: unknown) {
     $q.notify({
@@ -134,9 +139,9 @@ const uploadPhoto = async () => {
       color: 'negative',
     } as QNotifyOptions);
     console.error('Upload error:', err);
-    isUploading.value = false;
+  } finally {
+    isUploading.value = false; //use here eliminates need in other blocks of statement
   }
-  console.log(await apiService.getFiles());
 };
 
 const takeNewPhoto = () => {

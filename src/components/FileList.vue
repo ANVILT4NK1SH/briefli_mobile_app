@@ -27,7 +27,7 @@
         <!-- Grid layout for displaying file cards -->
         <div class="row justify-center">
           <q-card
-            v-for="file in filteredFiles"
+            v-for="file in fileStore.files"
             :key="file.fileName"
             class="q-pa-sm q-ma-xs justify-center"
             style="width: 21rem"
@@ -43,17 +43,19 @@
               <q-item-section style="max-width: 60px" class="items-center">
                 <q-avatar
                   icon="description"
-                  :text-color="getColorByType(file.documentTypes[0] ?? 'Unknown')"
+                  :text-color="fileStore.getColorByType(file.documentTypes[0] ?? 'Unknown')"
                 />
                 <q-item-label>
-                  {{ docTypeAbbreviation(file.documentTypes[0]!) }}
+                  {{ fileStore.docTypeAbbreviation(file.documentTypes[0]!) }}
                 </q-item-label>
               </q-item-section>
 
               <!-- Center section with file name and client name -->
               <q-item-section>
                 <q-item-label>{{ file.displayName }}</q-item-label>
-                <q-item-label caption>{{ getClientName(file.clientId) }}</q-item-label>
+                <q-item-label caption>{{
+                  clientStore.getClientNameById(file.clientId)
+                }}</q-item-label>
               </q-item-section>
 
               <!-- Right section with file status badge -->
@@ -61,20 +63,20 @@
                 <q-item-label
                   caption
                   :class="{
-                    'bg-positive': getFileCategoryStatus(file.status) === 'completed',
-                    'bg-negative': getFileCategoryStatus(file.status) === 'failed',
-                    'bg-warning': getFileCategoryStatus(file.status) === 'processing',
-                    'bg-info': getFileCategoryStatus(file.status) === 'loading',
+                    'bg-positive': fileStore.getFileCategoryStatus(file.status) === 'completed',
+                    'bg-negative': fileStore.getFileCategoryStatus(file.status) === 'failed',
+                    'bg-warning': fileStore.getFileCategoryStatus(file.status) === 'processing',
+                    'bg-info': fileStore.getFileCategoryStatus(file.status) === 'loading',
                   }"
                   style="border-radius: 1rem; padding: 0.5rem; color: white"
                 >
-                  {{ getFileCategoryStatus(file.status) }}
+                  {{ fileStore.getFileCategoryStatus(file.status) }}
                 </q-item-label>
               </q-item-section>
             </div>
             <!-- Timestamp outside 'row' div (below all in UI)-->
             <q-item-section side left class="q-pt-sm q-pl-md">
-              <q-item-label caption>{{ timeElapsed(file.createdAt) }} </q-item-label>
+              <q-item-label caption>{{ fileStore.timeElapsed(file.createdAt) }} </q-item-label>
             </q-item-section>
           </q-card>
         </div>
@@ -88,14 +90,15 @@
 import { useAuth0 } from '@auth0/auth0-vue';
 import { login } from 'src/services/authService';
 import { onMounted, ref, watch } from 'vue';
-import { filteredFiles, files, getFileCategoryStatus } from 'src/services/fileService';
-import { apiService } from 'src/services/apiService';
-import { clients, getClientName, getClients } from 'src/services/clientService';
 import PdfViewer from './PdfViewer.vue';
 import { onUnmounted } from 'vue';
 import { useQuasar } from 'quasar';
 import type { QNotifyOptions } from 'quasar';
 import StatusToolbar from './StatusToolbar.vue';
+import { useFileStore } from 'src/stores/FileStore';
+import { useClientStore } from 'src/stores/ClientStore';
+
+const clientStore = useClientStore();
 
 const auth0 = useAuth0();
 const pdfUrl = ref<string>('');
@@ -103,6 +106,7 @@ const showPdfModal = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 const currentFileName = ref<string>('');
 const $q = useQuasar();
+const fileStore = useFileStore();
 
 // Lifecycle hook to initialize component
 onMounted(async () => {
@@ -127,6 +131,7 @@ onMounted(async () => {
   // Fetch initial page data
   try {
     await getPageData();
+    await fileStore.getFilesFromApi();
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -155,11 +160,10 @@ const refresh = async (done: (cancel?: boolean) => void) => {
 
 // Fetch files and clients data from API
 const getPageData = async () => {
+  console.log('getPageData Fires');
   try {
-    const response = await apiService.getFiles();
-    files.value = response.data;
-    clients.value = await getClients();
-    console.log('Files fetched:', files.value);
+    await clientStore.getClients();
+    console.log('Files fetched:', fileStore.files);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -176,7 +180,8 @@ const showDocument = async (filename: string, rotations: number[]) => {
       window.URL.revokeObjectURL(pdfUrl.value);
     }
 
-    pdfUrl.value = await apiService.getDocument(filename, rotations);
+    await fileStore.getDocumentByFileName(filename, rotations); //make call using params
+    pdfUrl.value = fileStore.pdfUrl; //set new value from store
     console.log('PDF loaded:', filename);
     isLoading.value = false;
     showPdfModal.value = true;
@@ -202,24 +207,8 @@ const closePreview = () => {
   }
 };
 
-// Update the icon color using file type
-const getColorByType = (fileType: string): string => {
-  switch (fileType) {
-    case 'Packing List':
-      return 'blue';
-    case 'Bill of Lading':
-      return 'green';
-    case 'Commercial Invoice':
-      return 'red';
-    case 'Uknown':
-      return 'grey';
-    default:
-      return 'grey';
-  }
-};
-
 // Calculate time elapsed since upload
-const timeElapsed = (timeCreated: string): string => {
+/* const timeElapsed = (timeCreated: string): string => {
   const elapsedTime = (new Date().getTime() - new Date(timeCreated).getTime()) / (1000 * 60);
 
   const result =
@@ -232,26 +221,9 @@ const timeElapsed = (timeCreated: string): string => {
         : elapsedTime / (60 * 24) < 2 && elapsedTime / (60 * 24) > 0
           ? `uploaded ${(elapsedTime / (60 * 24)).toFixed()} day ago`
           : `uploaded ${(elapsedTime / (60 * 24)).toFixed()} days ago`;
-  console.log('result:', result);
 
   return result;
-};
-
-// Abbreviate file.documentType for display
-const docTypeAbbreviation = (docType: string): string => {
-  switch (docType) {
-    case 'Packing List':
-      return 'PL';
-    case 'Bill of Lading':
-      return 'BOL';
-    case 'Commercial Invoice':
-      return 'INV';
-    case 'Uknown':
-      return 'UNK';
-    default:
-      return 'UNK';
-  }
-};
+}; */
 
 // Clean up resources when component is unmounted
 onUnmounted(() => {
