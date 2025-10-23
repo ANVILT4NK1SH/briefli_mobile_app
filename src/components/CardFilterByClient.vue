@@ -1,6 +1,6 @@
 <template>
   <q-card class="q-pa-md column flex flex-center column custom-rounded">
-    <q-select
+    <!-- <q-select
       v-model="selectedClient"
       :options="clientStore.getClientNamesWithUnassignedandAll"
       label="Select Client"
@@ -8,11 +8,18 @@
       use-input
       class="inherit"
     />
-    <q-btn @click="clickHandler(selectedClient!)" class="q-mt-md" color="secondary"> Filter </q-btn>
+    <q-btn
+      @click="clickHandler(selectedClient!)"
+      @update:selected-client="selectedClient"
+      class="q-mt-md"
+      color="secondary"
+    >
+      Filter
+    </q-btn> -->
   </q-card>
 </template>
 
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useFileStore } from 'src/stores/FileStore';
 import { useClientStore } from 'src/stores/ClientStore';
@@ -42,4 +49,4 @@ function clickHandler(selectedClient: string) {
 function toggleCard() {
   emit('toggle');
 }
-</script>
+</script> -->
