@@ -7,9 +7,9 @@ import { useClientStore } from './ClientStore';
 export const useFileStore = defineStore('FileStore', {
   state: () => ({
     files: ref<ImportedDocument[]>([]),
+    clientFilteredFiles: ref<ImportedDocument[]>([]),
     pdfUrl: ref(''),
     statusBeingFiltered: ref<string[]>([]),
-    clientUnassigned: ref(false), //probably better naming convention?
 
     //status categories (do these go here? not 'state'?)
     statusOk: ref<string[]>(['APPROVED', 'EXPORTED', 'ARCHIVED', 'ARCHIVE_FAILED', 'EXPORTING']),
@@ -105,21 +105,14 @@ export const useFileStore = defineStore('FileStore', {
       return this.files;
     },
     //filter existing files by status
-    async filterByStatus(status: string[], clientUnassigned: boolean) {
-      // reset files array
+    async filterByStatus(status: string[]) {
       await this.getFilesFromApi();
-
+      const clientStore = useClientStore();
       // set files array to variable
       let filteredFiles = this.files;
 
       // set filter by status and clientUnassigned
       this.statusBeingFiltered = status;
-      this.clientUnassigned = clientUnassigned;
-
-      // fitler by clientUnassigned
-      if (clientUnassigned) {
-        filteredFiles = filteredFiles.filter((file) => !file.clientId);
-      }
 
       // filter by status unless status is 'all' (via helper function)
       if (status.length > 0 && !this.isStatusAll(status)) {
@@ -127,6 +120,15 @@ export const useFileStore = defineStore('FileStore', {
       }
 
       this.files = filteredFiles;
+
+      if (clientStore.selectedClient !== 'All' && clientStore.selectedClient !== 'Unassigned') {
+        this.files = this.files.filter(
+          (file) => file.clientId === clientStore.getClientIdByName(clientStore.selectedClient),
+        );
+      } else if (clientStore.selectedClient === 'Unassigned') {
+        this.files = this.files.filter((file) => file.clientId === null);
+      }
+
       return this.files;
     },
 

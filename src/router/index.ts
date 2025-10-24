@@ -6,6 +6,7 @@ import {
   createWebHistory,
 } from 'vue-router';
 import routes from './routes';
+import { createAuthGuard } from '@auth0/auth0-vue';
 
 /*
  * If not building with SSR mode, you can
@@ -15,6 +16,7 @@ import routes from './routes';
  * async/await or return a Promise which resolves
  * with the Router instance.
  */
+export const authGuard = createAuthGuard();
 
 export default defineRouter(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER

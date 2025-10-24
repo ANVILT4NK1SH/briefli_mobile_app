@@ -52,7 +52,7 @@
 
               <!-- Center section with file name and client name -->
               <q-item-section>
-                <q-item-label>{{ file.displayName }}</q-item-label>
+                <q-item-label class="ellipsis">{{ file.displayName }}</q-item-label>
                 <q-item-label caption>{{
                   clientStore.getClientNameById(file.clientId)
                 }}</q-item-label>
