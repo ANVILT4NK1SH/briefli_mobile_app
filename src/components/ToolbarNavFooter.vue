@@ -1,19 +1,19 @@
 <template>
-  <q-toolbar class="q-pa-xs justify-center" style="padding: 0; margin-bottom: 0">
+  <q-toolbar class="q-pa-none row justify-center">
     <q-btn
+      style="width: 75px"
       :class="btnSelected === 'home' ? 'q-pa-xs selected' : 'q-pa-xs'"
       flat
       stack
       to="/home"
       label="Home"
       icon="home"
-      style="background-color:"
       @click="((btnSelected = 'home'), fileStore.statusAll)"
     />
 
     <q-btn
       :class="btnSelected === 'clients' ? 'q-pa-xs selected' : 'q-pa-xs'"
-      style="margin-right: 3rem"
+      style="margin-right: 2.37rem; width: 75px"
       flat
       stack
       to="/clients"
@@ -31,6 +31,8 @@
         background-color: white;
         z-index: 100;
         bottom: 1px;
+        left: 50%;
+        transform: translate(-50%);
         border-radius: 0.75rem;
         box-shadow:
           2px 0px 3px 2px #00000030,
@@ -40,8 +42,8 @@
       ><q-icon name="upload" size="2.5rem" />
     </q-btn>
     <q-btn
+      style="margin-left: 3rem; width: 75px"
       :class="btnSelected === 'review' ? 'q-pa-xs selected' : 'q-pa-xs'"
-      style="margin-left: 3rem"
       flat
       stack
       to="/review"
@@ -50,6 +52,7 @@
       @click="btnSelected = 'review'"
     />
     <q-btn
+      style="width: 75px"
       :class="btnSelected === 'ai' ? 'q-pa-xs selected' : 'q-pa-xs'"
       flat
       stack
